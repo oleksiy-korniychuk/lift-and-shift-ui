@@ -33,4 +33,4 @@ jobs:
 
     - name: Deploy to S3
       run: |
-        aws s3 sync ./build s3://lift-and-shift-ui --delete --acl public-read
+        aws s3 sync ./build s3://lift-and-shift-ui --delete
