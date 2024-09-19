@@ -1,5 +1,5 @@
 import React from 'react';
-import Session from './components/Session';
+import Workout from './components/Workout';
 
 import './App.css';
 import logo from './logo.svg';
@@ -12,7 +12,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <Session/>
+        <Workout/>
       </header>
     </div>
   );

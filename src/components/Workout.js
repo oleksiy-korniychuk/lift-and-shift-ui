@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Exercise from './Exercise';
 
-const Session = () => {
+const Workout = () => {
     const [exercises, setExercises] = useState(''); // State to hold the fetched text
     const [loading, setLoading] = useState(true); // State to track loading status
     const [error, setError] = useState(null); // State to track errors
@@ -41,4 +41,4 @@ const Session = () => {
     )
 }
 
-export default Session
+export default Workout
