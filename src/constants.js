@@ -1,0 +1,1 @@
+export const API_URL = 'http://lift-and-shift-env.eba-kekvarn7.us-east-2.elasticbeanstalk.com';

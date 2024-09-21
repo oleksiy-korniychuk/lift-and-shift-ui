@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { API_URL } from '../constants';
 import Exercise from './Exercise';
 
 const Workout = () => {
@@ -10,7 +11,7 @@ const Workout = () => {
         // Define the fetch call inside useEffect
         const fetchText = async () => {
         try {
-            const response = await fetch('http://lift-and-shift-env.eba-kekvarn7.us-east-2.elasticbeanstalk.com/exercise/1');
+            const response = await fetch(API_URL + '/exercise/1');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
