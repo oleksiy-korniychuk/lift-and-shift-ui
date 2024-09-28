@@ -1,20 +1,29 @@
 import React from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+
+import Hello from './components/Hello';
+import Login from './components/Login';
 import Workout from './components/Workout';
+import PrivateRoute from './routes/PrivateRoute';
 
 import './App.css';
-import logo from './logo.svg';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <Workout/>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/hello" element={<Hello />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+            path="/"
+            element={
+                <PrivateRoute>
+                    <Workout />
+                </PrivateRoute>
+            }
+        />
+      </Routes>
+    </Router>
   );
 }
 

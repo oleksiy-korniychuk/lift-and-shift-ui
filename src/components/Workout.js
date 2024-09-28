@@ -11,7 +11,10 @@ const Workout = () => {
         // Define the fetch call inside useEffect
         const fetchText = async () => {
         try {
-            const response = await fetch(API_URL + '/exercise/1');
+            const response = await fetch(API_URL + '/exercise/1', {
+                method: 'GET',
+                credentials: 'include'
+            });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
