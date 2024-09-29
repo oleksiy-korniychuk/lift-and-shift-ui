@@ -1,0 +1,41 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 10px;
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+  }
+  
+  .line {
+    display: flex;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+  }
+  
+  .line:hover {
+    background-color: #3c4350;
+  }
+  
+  .line h3, .line p {
+    margin: 0;
+    white-space: nowrap; /* Keeps the text on one line */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds ellipsis if text overflows */
+  }
+  
+  .line h3 {
+    flex: 1.5;
+  }
+  
+  .line p {
+    flex: 1; /* Adjust this to control the space between name and description */
+    text-align: left; /* Align the description to the right */
+  }
+  

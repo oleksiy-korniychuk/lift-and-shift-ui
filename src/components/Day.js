@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { API_URL } from '../constants';
-import Exercise from './Exercise';
 
-const Workout = () => {
+const Day = () => {
     const [exercises, setExercises] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const { day_id } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchText = async () => {
@@ -32,19 +32,25 @@ const Workout = () => {
         fetchText();
     }, [day_id]);
 
+    const startWorkout = (day_id) => {
+        navigate(`/workout/${day_id}`);
+    }
+
     return (
-        <div className='Session'>
+        <div className='list'>
+            <h2>Day: {!loading && exercises[1].day.name}</h2>
+            <p>select a program</p>
             {loading ? 'loading' : (error ? 'error' : 
             exercises.map((exercise, index) => (
-                <Exercise
-                    key={index}
-                    name={exercise.name}
-                    sets={exercise.sets}
-                    reps={exercise.reps}
-                />
+                <div className='line' key={exercise.id}>
+                    <h3>{exercise.name}</h3>
+                    <p>{exercise.sets} sets of {exercise.reps} reps</p>
+                    <p>{exercise.notes}</p>
+                </div>
             )))}
+            <button onClick={() => startWorkout(day_id)}>Start Workout</button>
         </div>
     )
 }
 
-export default Workout
+export default Day
