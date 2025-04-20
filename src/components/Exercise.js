@@ -25,19 +25,20 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
                 if (logData && logData.length > 0) {
                     // Convert to our internal format
                     const loadedSets = logData.map(log => ({
-                        id: log.set_number,
+                        id: log.id,
+                        set_number: log.set_number,
                         weight: log.weight.toString(),
                         reps: log.reps.toString()
                     }));
                     setSetList(loadedSets);
                 } else {
                     // Initialize with default set if no logs exist
-                    setSetList([{ id: 0, weight: '', reps: ''}]);
+                    setSetList([{ set_number: 1, weight: '', reps: ''}]);
                 }
             } catch (error) {
                 console.error('Error loading logs:', error);
                 // Initialize with default set on error
-                setSetList([{ id: 0, weight: '', reps: ''}]);
+                setSetList([{ set_number: 1, weight: '', reps: ''}]);
             } finally {
                 setIsLoading(false);
             }
@@ -48,30 +49,50 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
         }
     }, [workoutId, exerciseId]);
 
-    const addSet = () => {
-        console.log("Adding new set");
-        setSetList(prevSetList => [...prevSetList, { id: prevSetList.length, weight: '', reps: ''}]);
+    const addSet = async () => {
+        try {
+            console.log("Adding new set");
+            // Delete the log entry from the database
+            const setNumber = setList.length > 0 ? setList[setList.length - 1].set_number + 1 : 1;
+            const { data, error } = await supabase
+                .from('log')
+                .insert({
+                    workout_id: workoutId,
+                    exercise_id: exerciseId,
+                    set_number: setNumber,
+                    user_id: user.id,
+                    weight: 0,
+                    reps: 0
+                })
+                .select()
+
+            if (data) {
+                setSetList(prevSetList => [...prevSetList, { id: data[0].id, set_number: setNumber, weight: '', reps: ''}]);
+            }
+                
+            if (error) throw error;
+        } catch (error) {
+            console.error('Error removing set:', error);
+        }
     }
     
-    const removeSet = async (index) => {
-        console.log("Removing set:", index);
+    const removeSet = async (id) => {
+        console.log("Removing set:", id);
         try {
             // Cancel any pending saves first
             clearTimeout(timeoutIdRef.current);
             
             // Delete the log entry from the database
-            const setNumber = index + 1;
             const { error } = await supabase
                 .from('log')
                 .delete()
-                .eq('workout_id', workoutId)
-                .eq('exercise_id', exerciseId)
-                .eq('set_number', setNumber);
+                .eq('workout_id', workoutId) // For some reason just having .eq('id', id) triggers Brave adblocker
+                .eq('id', id);
                 
             if (error) throw error;
             
             // Update local state
-            setSetList(prevSetList => { return prevSetList.filter((_, i) => i !== index) });
+            setSetList(prevSetList => { return prevSetList.filter((set) => set.id !== id) });
             // Cancel any pending saves first
             clearTimeout(timeoutIdRef.current);
             saveChanges();
@@ -80,11 +101,11 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
         }
     }
     
-    const updateSet = (index, property, value) => {
-        console.log("Updating set:", index, property, value);
+    const updateSet = (id, property, value) => {
+        console.log("Updating set:", id, property, value);
         setSetList(prevSetList => {
-            return prevSetList.map((set, i) => {
-                if(i === index) {
+            return prevSetList.map((set) => {
+                if(set.id === id) {
                     return { ...set, [property]: value};
                 }
                 return set;
@@ -98,19 +119,20 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
         
         try {
             // Prepare logs with unique keys for upsert
-            const logs = setList.map((set, index) => ({
-                workout_id: workoutId,
-                exercise_id: exerciseId,
-                set_number: index + 1, // Using these three fields as a composite unique key
-                user_id: user.id,
-                weight: parseFloat(set.weight) || 0,
-                reps: parseInt(set.reps) || 0
-            }));
+            const logs = setList.map((set) => ({
+                    id: set.id,
+                    workout_id: workoutId,
+                    exercise_id: exerciseId,
+                    set_number: set.set_number,
+                    user_id: user.id,
+                    weight: parseFloat(set.weight) || 0,
+                    reps: parseInt(set.reps) || 0
+                }));
 
             const { error } = await supabase
                 .from('log')
                 .upsert(logs, { 
-                    onConflict: 'workout_id,exercise_id,set_number',
+                    onConflict: 'id',
                     ignoreDuplicates: false 
                 });
 
@@ -142,12 +164,12 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
             {setList.map((set, index) => (
                 <Set
                     key={index}
-                    number={index + 1}
+                    number={set.set_number}
                     weight={set.weight}
                     actualReps={set.reps}
-                    onWeightChange={(value) => updateSet(index, 'weight', value)}
-                    onRepsChanged={(value) => updateSet(index, 'reps', value)}
-                    onRemove={() => removeSet(index)}
+                    onWeightChange={(value) => updateSet(set.id, 'weight', value)}
+                    onRepsChanged={(value) => updateSet(set.id, 'reps', value)}
+                    onRemove={() => removeSet(set.id)}
                 />
             ))}
             <div>

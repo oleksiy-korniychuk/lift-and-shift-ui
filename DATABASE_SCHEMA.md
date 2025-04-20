@@ -49,7 +49,6 @@
 - **reps** `int2`
 - **weight** `float4`
 - **user_id** `uuid` (foreign key -> auth.user.id)
-- unique(workout_id, exercise_id, set_number)
 
 ## Notes
 
