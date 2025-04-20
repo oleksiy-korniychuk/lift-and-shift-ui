@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from '../constants';
+import { useAuth } from '../context/AuthContext';
 import SelectLine from './SelectLine';
+
+import { supabase } from '../supabase';
 import './SelectList.css';
 
 const ProgramSelect = () => {
-    const [programs, setPrograms] = useState('');
+    const [programs, setPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchText = async () => {
             try {
-                //TODO: Add app state to store and retrieve user_id after signin
-                const response = await fetch(API_URL + '/program?user_id=1', {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setPrograms(data);
+                const { data: programs, error } = await supabase
+                    .from('program')
+                    .select('*')
+                    .eq('user_id', user.id);
+                if (error) throw error;
+
+                console.log(programs[0].id);
+                //const data = await programs.json();
+                setPrograms(programs);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -31,7 +33,7 @@ const ProgramSelect = () => {
         };
 
         fetchText();
-    }, []); // Empty dependency array means this effect runs once on component mount
+    }, [user]);
 
     const selectProgram = (program_id) => {
         navigate(`/blocks/${program_id}`);

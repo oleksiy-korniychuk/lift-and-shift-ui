@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { API_URL } from '../constants';
+import { useAuth } from '../context/AuthContext';
+import { supabase } from '../supabase';
+import DayCreate from './DayCreate';
 import SelectLine from './SelectLine';
 import './SelectList.css';
 
@@ -10,48 +12,51 @@ const Day = () => {
     const [error, setError] = useState(null);
 
     const { block_id } = useParams();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchText = async () => {
-        try {
-            const response = await fetch(API_URL + '/day?block_id=' + block_id, {
-                method: 'GET',
-                credentials: 'include'
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            try {
+                const { data: days, error } = await supabase
+                    .from('day')
+                    .select('*')
+                    .eq('block_id', block_id)
+                    .eq('user_id', user.id);
+                if (error) throw error;
+
+                setDays(days);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
             }
-            const data = await response.json();
-            setDays(data);
-        } catch (error) {
-            setError(error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+        };
 
         fetchText();
-    }, [block_id]);
+    }, [block_id, user]);
 
     const selectDay = (day_id) => {
         navigate(`/day/${day_id}`);
     }
 
     return (
-        <div className='list'>
-            <h2>Days</h2>
-            <p>select a day</p>
-            {loading ? 'loading' : (error ? 'error' : 
-            days.map((day) => (
-                <SelectLine
-                    key={day.id}
-                    id={day.id}
-                    name={day.name}
-                    description={day.description}
-                    clickHandler={selectDay}
-                />
-            )))}
+        <div>
+            <div className='list'>
+                <h2>Days</h2>
+                <p>select a day</p>
+                {loading ? 'loading' : (error ? 'error' : 
+                days.map((day) => (
+                    <SelectLine
+                        key={day.id}
+                        id={day.id}
+                        name={day.name}
+                        description={day.description}
+                        clickHandler={selectDay}
+                    />
+                )))}
+            </div>
+            <DayCreate/>
         </div>
     )
 }
