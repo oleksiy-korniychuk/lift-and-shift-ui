@@ -86,7 +86,7 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
             const { error } = await supabase
                 .from('log')
                 .delete()
-                .eq('workout_id', workoutId) // For some reason just having .eq('id', id) triggers Brave adblocker
+                .eq('workout_id', workoutId) // For some reason only having .eq('id', id) triggers Brave adblocker
                 .eq('id', id);
                 
             if (error) throw error;
@@ -95,7 +95,6 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
             setSetList(prevSetList => { return prevSetList.filter((set) => set.id !== id) });
             // Cancel any pending saves first
             clearTimeout(timeoutIdRef.current);
-            saveChanges();
         } catch (error) {
             console.error('Error removing set:', error);
         }
@@ -186,13 +185,13 @@ const Set = ({number, weight, actualReps, onWeightChange, onRepsChanged, onRemov
             <input
                 type="number"
                 placeholder="Weight (lb)"
-                value={weight}
+                value={weight === '0' ? '' : weight}
                 onChange={(e) => onWeightChange(e.target.value)}
             />
             <input
                 type="number"
                 placeholder="Reps"
-                value={actualReps}
+                value={actualReps === '0' ? '' : actualReps}
                 onChange={(e) => onRepsChanged(e.target.value)}
             />
             <button onClick={onRemove}>-</button>
