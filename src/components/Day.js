@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../supabase';
 import ExerciseCreate from './ExerciseCreate';
+import SelectLine from './SelectLine';
+import './SelectList.css';
 
 const Day = () => {
     const [exercises, setExercises] = useState([]);
@@ -52,7 +54,6 @@ const Day = () => {
             if (dayError) throw dayError;
             const { block_id, block: { program_id } } = dayData;
 
-
             const { data: workoutData, error: workoutError } = await supabase
                 .from('workout')
                 .insert([
@@ -90,27 +91,38 @@ const Day = () => {
             setError(error.message);
         }
 
-        // Pass exercises as state in the navigation
         navigate(`/workout/${workout_id}`);
     }
 
     return (
-        <div>
-            <div className='list'>
-                <h2>Day: {dayName}</h2>
-                {loading ? 'loading' : (error ? 'error' : 
-                exercises.map((exercise) => (
-                    <div className='line' key={exercise.id}>
-                        <h3>{exercise.name}</h3>
-                        <p>{exercise.sets} sets of {exercise.reps} reps</p>
-                        <p>{exercise.notes}</p>
-                    </div>
-                )))}
-                <button onClick={startWorkout}>Start Workout</button>
+        <div className="Session">
+            <div className="create-form-container">
+                <h2>{dayName}</h2>
+                {loading ? (
+                    <p>Loading exercises...</p>
+                ) : error ? (
+                    <p className="create-form-error">{error}</p>
+                ) : exercises.length === 0 ? (
+                    <p>No exercises found for this day.</p>
+                ) : (
+                    <>
+                        <p>Exercise list</p>
+                        {exercises.map((exercise) => (
+                            <SelectLine
+                                key={exercise.id}
+                                id={exercise.id}
+                                name={exercise.name}
+                                description={`${exercise.sets} sets × ${exercise.reps} reps${exercise.notes ? ` • ${exercise.notes}` : ''}`}
+                                clickHandler={() => {}}
+                            />
+                        ))}
+                        <button className="create-form-button" onClick={startWorkout}>Start Workout</button>
+                    </>
+                )}
             </div>
             <ExerciseCreate />
         </div>
-    )
+    );
 }
 
 export default Day
