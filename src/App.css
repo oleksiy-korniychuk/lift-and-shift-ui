@@ -421,3 +421,32 @@
 .create-form-button:hover {
   background-color: var(--accent-hover);
 }
+
+/* Password visibility toggle */
+.password-field .password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field input {
+  padding-right: 40px;
+  width: 100%;
+}
+
+.password-toggle-button {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.password-toggle-button:hover {
+  color: var(--text-primary);
+}
