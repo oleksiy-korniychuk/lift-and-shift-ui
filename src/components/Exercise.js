@@ -184,12 +184,16 @@ const Set = ({number, weight, actualReps, onWeightChange, onRepsChanged, onRemov
             <div className="set-number">{number}</div>
             <input
                 type="number"
+                inputMode="decimal"
+                pattern="[0-9]*"
                 placeholder="Weight (lb)"
                 value={weight === '0' ? '' : weight}
                 onChange={(e) => onWeightChange(e.target.value)}
             />
             <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="Reps"
                 value={actualReps === '0' ? '' : actualReps}
                 onChange={(e) => onRepsChanged(e.target.value)}

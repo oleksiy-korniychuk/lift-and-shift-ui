@@ -72,8 +72,11 @@ const ExerciseCreate = () => {
                     <label>Sets:</label>
                     <input
                         type="number"
-                        value={sets}
+                        value={sets === 0 ? '' : sets}
+                        placeholder="ex. 3"
                         onChange={(e) => setSets(parseInt(e.target.value))}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         required
                     />
                 </div>
@@ -81,8 +84,11 @@ const ExerciseCreate = () => {
                     <label>Reps:</label>
                     <input
                         type="number"
-                        value={reps}
+                        value={reps === 0 ? '' : reps}
+                        placeholder="ex. 10"
                         onChange={(e) => setReps(parseInt(e.target.value))}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                     />
                 </div>
                 <div className="form-field">

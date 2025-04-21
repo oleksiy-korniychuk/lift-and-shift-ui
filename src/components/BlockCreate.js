@@ -45,8 +45,11 @@ const BlockCreate = () => {
                     <label>Block Number:</label>
                     <input
                         type="number"
-                        value={blockNumber}
+                        value={blockNumber === 0 ? '' : blockNumber}
+                        placeholder="ex. 1"
                         onChange={(e) => setBlockNumber(parseInt(e.target.value))}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         required
                     />
                 </div>
