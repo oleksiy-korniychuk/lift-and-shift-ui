@@ -1,40 +1,35 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-
 import { supabase } from '../supabase';
 
-const DayCreate = ({ onDayCreated }) => {
-    const [dayName, setDayName] = useState('');
-    const [dayDescription, setDayDescription] = useState('');
+const ProgramCreate = ({ onProgramCreated }) => {
+    const [programName, setProgramName] = useState('');
+    const [programDescription, setProgramDescription] = useState('');
     const [error, setError] = useState(null);
-
-    const { block_id } = useParams();
     const { user } = useAuth();
 
-    const saveBlock = async (e) => {
+    const saveProgram = async (e) => {
         e.preventDefault();
         try {
             const { error } = await supabase
-                .from('day')
+                .from('program')
                 .insert([
                     {
-                        block_id: block_id,
-                        user_id: user.id,
-                        name: dayName,
-                        description: dayDescription
+                        name: programName,
+                        description: programDescription,
+                        user_id: user.id
                     }
                 ])
                 .select();
 
             if (error) throw error;
             // clear form
-            setDayName('');
-            setDayDescription('');
+            setProgramName('');
+            setProgramDescription('');
 
             // Notify parent component to refresh the list
-            if (onDayCreated) {
-                onDayCreated();
+            if (onProgramCreated) {
+                onProgramCreated();
             }
 
         } catch (error) {
@@ -44,14 +39,15 @@ const DayCreate = ({ onDayCreated }) => {
 
     return (
         <div className="create-form-container">
-            <h2>Create Day</h2>
-            <form onSubmit={saveBlock} className="create-form">
+            <h2>Create Program</h2>
+            <form onSubmit={saveProgram} className="create-form">
                 <div className="form-field">
-                    <label>Day Name:</label>
+                    <label>Program Name:</label>
                     <input
                         type="text"
-                        value={dayName}
-                        onChange={(e) => setDayName(e.target.value)}
+                        value={programName}
+                        onChange={(e) => setProgramName(e.target.value)}
+                        placeholder="ex. Starting Strength"
                         required
                     />
                 </div>
@@ -59,8 +55,9 @@ const DayCreate = ({ onDayCreated }) => {
                     <label>Description:</label>
                     <input
                         type="text"
-                        value={dayDescription}
-                        onChange={(e) => setDayDescription(e.target.value)}
+                        value={programDescription}
+                        onChange={(e) => setProgramDescription(e.target.value)}
+                        placeholder="Program description"
                     />
                 </div>
                 <button type="submit" className="create-form-button">Create</button>
@@ -70,4 +67,4 @@ const DayCreate = ({ onDayCreated }) => {
     )
 }
 
-export default DayCreate
+export default ProgramCreate

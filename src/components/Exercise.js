@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../supabase';
 
@@ -112,7 +112,7 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
         });
     }
 
-    const saveChanges = React.useCallback(async () => {
+    const saveChanges = useCallback(async () => {
         if (isLoading) return;
         console.log("Saving changes:", setList);
         
@@ -151,7 +151,7 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
         
         // Cleanup function to clear timeout if component unmounts
         return () => clearTimeout(timeoutIdRef.current);
-    }, [setList, workoutId, exerciseId, user, isLoading, saveChanges]);
+    }, [workoutId, exerciseId, user, isLoading, saveChanges]);
 
     if (isLoading) {
         return <div>Loading exercise data...</div>;

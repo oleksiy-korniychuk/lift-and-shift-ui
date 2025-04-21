@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../supabase';
@@ -15,26 +15,27 @@ const DaySelect = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchText = async () => {
-            try {
-                const { data: days, error } = await supabase
-                    .from('day')
-                    .select('*')
-                    .eq('block_id', block_id)
-                    .eq('user_id', user.id);
-                if (error) throw error;
+    const fetchDays = useCallback(async () => {
+        try {
+            setLoading(true);
+            const { data: days, error } = await supabase
+                .from('day')
+                .select('*')
+                .eq('block_id', block_id)
+                .eq('user_id', user.id);
+            if (error) throw error;
 
-                setDays(days);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchText();
+            setDays(days);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     }, [block_id, user]);
+
+    useEffect(() => {
+        fetchDays();
+    }, [fetchDays]);
 
     const selectDay = (day_id) => {
         navigate(`/day/${day_id}`);
@@ -63,7 +64,7 @@ const DaySelect = () => {
                     </>
                 )}
             </div>
-            <DayCreate/>
+            <DayCreate onDayCreated={fetchDays}/>
         </div>
     )
 }

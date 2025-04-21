@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ProgramCreate from './ProgramCreate';
 import SelectLine from './SelectLine';
 
 import { supabase } from '../supabase';
@@ -13,27 +14,25 @@ const ProgramSelect = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchText = async () => {
-            try {
-                const { data: programs, error } = await supabase
-                    .from('program')
-                    .select('*')
-                    .eq('user_id', user.id);
-                if (error) throw error;
-
-                console.log(programs[0].id);
-                //const data = await programs.json();
-                setPrograms(programs);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchText();
+    const fetchPrograms = useCallback(async () => {
+        try {
+            setLoading(true);
+            const { data: programs, error } = await supabase
+                .from('program')
+                .select('*')
+                .eq('user_id', user.id);
+            if (error) throw error;
+            setPrograms(programs);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     }, [user]);
+
+    useEffect(() => {
+        fetchPrograms();
+    }, [fetchPrograms]);
 
     const selectProgram = (program_id) => {
         navigate(`/blocks/${program_id}`);
@@ -57,7 +56,9 @@ const ProgramSelect = () => {
                     clickHandler={selectProgram}
                 />
             )))}
-            
+
+            <ProgramCreate onProgramCreated={fetchPrograms} />
+
             <button 
                 className="workout-history-btn" 
                 onClick={goToWorkoutHistory}

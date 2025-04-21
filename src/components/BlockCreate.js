@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 import { supabase } from '../supabase';
 
-const BlockCreate = () => {
+const BlockCreate = ({ onBlockCreated }) => {
     const [blockNumber, setBlockNumber] = useState(0);
     const [blockDescription, setBlockDescription] = useState('');
     const [error, setError] = useState(null);
@@ -28,9 +28,15 @@ const BlockCreate = () => {
                 .select();
 
             if (error) throw error;
+            
             // clear form
             setBlockNumber(0);
             setBlockDescription('');
+            
+            // Notify parent component to refresh the list
+            if (onBlockCreated) {
+                onBlockCreated();
+            }
 
         } catch (error) {
             setError(error.message);
