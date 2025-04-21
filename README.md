@@ -30,9 +30,12 @@ The components are tied together as follows:
 - The BlockSelect component loads a list of all `blocks` in the selected Program
 - The DaySelect component loads a list of all `days` in the selected Block
 - The Day component loads a list of `exersises` in the selected Day
+- The WorkoutSelect component loads a list of all past `workouts` logged by the user
 - The Workout component loads a list of Exersises and sets in the selected Workout
 - The Exercise component loads the list of sets for the Exercise in the current Workout
 
 Note: each of the *Select components also loads the corresponding *Create component that allows the user to add a new entity of that type. For example on DaySelect you can use the DayCreate component to create a new Day and add it to the currently selected Block.
 
 The typical User will start on ProgramSelect(/programs) and proceed through the BlockSelect(/blocks/{program_id}) and DaySelect(/days/{block_id}) screens to land on the Day screen (/day/{day_id}). From here they will click "Start Workout" and land on the Workout(/workout/{workout_id}) screen where each exercise is loaded using the Excersise component and they can add, remove, and update sets for each exersise.
+
+Users can also access their workout history directly from the ProgramSelect(/programs) page by clicking a button that navigates to the WorkoutSelect(/workouts) screen. This allows users to view and select from their past workouts to check their previous performance.

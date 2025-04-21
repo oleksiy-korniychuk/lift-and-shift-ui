@@ -39,6 +39,10 @@ const ProgramSelect = () => {
         navigate(`/blocks/${program_id}`);
     }
 
+    const goToWorkoutHistory = () => {
+        navigate('/workouts');
+    }
+
     return (
         <div className='list'> 
             <h2>Programs</h2>
@@ -53,6 +57,13 @@ const ProgramSelect = () => {
                     clickHandler={selectProgram}
                 />
             )))}
+            
+            <button 
+                className="workout-history-btn" 
+                onClick={goToWorkoutHistory}
+            >
+                View Workout History
+            </button>
         </div>
     )
 }
