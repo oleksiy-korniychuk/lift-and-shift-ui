@@ -38,29 +38,29 @@ const BlockCreate = () => {
     };
 
     return (
-        <div>
+        <div className="create-form-container">
             <h2>Create Block</h2>
-            <form onSubmit={saveBlock}>
-                <div>
-                <label>Block Number:</label>
-                <input
-                    type="number"
-                    value={blockNumber}
-                    onChange={(e) => setBlockNumber(parseInt(e.target.value))}
-                    required
-                />
+            <form onSubmit={saveBlock} className="create-form">
+                <div className="form-field">
+                    <label>Block Number:</label>
+                    <input
+                        type="number"
+                        value={blockNumber}
+                        onChange={(e) => setBlockNumber(parseInt(e.target.value))}
+                        required
+                    />
                 </div>
-                <div>
-                <label>Description:</label>
-                <input
-                    type="text"
-                    value={blockDescription}
-                    onChange={(e) => setBlockDescription(e.target.value)}
-                />
+                <div className="form-field">
+                    <label>Description:</label>
+                    <input
+                        type="text"
+                        value={blockDescription}
+                        onChange={(e) => setBlockDescription(e.target.value)}
+                    />
                 </div>
-                <button type="submit">Create</button>
+                <button type="submit" className="create-form-button">Create</button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="create-form-error">{error}</p>}
         </div>
     )
 }

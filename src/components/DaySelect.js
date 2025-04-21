@@ -6,7 +6,7 @@ import DayCreate from './DayCreate';
 import SelectLine from './SelectLine';
 import './SelectList.css';
 
-const Day = () => {
+const DaySelect = () => {
     const [days, setDays] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -41,24 +41,31 @@ const Day = () => {
     }
 
     return (
-        <div>
-            <div className='list'>
+        <div className="Session">
+            <div className="create-form-container">
                 <h2>Days</h2>
-                <p>select a day</p>
-                {loading ? 'loading' : (error ? 'error' : 
-                days.map((day) => (
-                    <SelectLine
-                        key={day.id}
-                        id={day.id}
-                        name={day.name}
-                        description={day.description}
-                        clickHandler={selectDay}
-                    />
-                )))}
+                {loading ? (
+                    <p>Loading days...</p>
+                ) : error ? (
+                    <p className="create-form-error">{error}</p>
+                ) : (
+                    <>
+                        <p>Select a day</p>
+                        {days.map((day) => (
+                            <SelectLine
+                                key={day.id}
+                                id={day.id}
+                                name={day.name}
+                                description={day.description}
+                                clickHandler={selectDay}
+                            />
+                        ))}
+                    </>
+                )}
             </div>
             <DayCreate/>
         </div>
     )
 }
 
-export default Day
+export default DaySelect

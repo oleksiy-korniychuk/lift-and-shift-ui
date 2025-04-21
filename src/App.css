@@ -66,10 +66,6 @@
   transition: color 0.3s ease;
 }
 
-.nav-button:hover {
-  color: var(--accent-color);
-}
-
 .back-button {
   display: flex;
   align-items: center;
@@ -203,4 +199,225 @@
     margin-top: calc(60px + env(safe-area-inset-top));
     padding-bottom: env(safe-area-inset-bottom);
   }
+}
+
+/* Exercise and Set styling */
+.exercise-container {
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 auto 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+}
+
+.exercise-heading {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: var(--accent-color);
+  text-align: center;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  min-width: 300px;
+}
+
+.set-number {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  min-width: 30px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.set-row input {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px;
+  width: 100px;
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.set-row input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.set-row button {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  color: #ff4444;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.set-row button:hover {
+  background-color: #ff4444;
+  color: white;
+  border-color: #ff4444;
+}
+
+.add-set-button {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 10px auto 0;
+  display: block;
+}
+
+/* Workout specific styles */
+.workout-header {
+  margin-bottom: 30px;
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Session {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Create Form Components */
+.create-form-container {
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 auto 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.create-form-container h2 {
+  color: var(--accent-color);
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.form-field input[type="text"],
+.form-field input[type="number"] {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.form-field input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.checkbox-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+    padding: 8px 12px;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.checkbox-field input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-primary);
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.checkbox-field input[type="checkbox"]:checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.checkbox-field input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    left: 4px;
+    top: -1px;
+}
+
+.checkbox-field label {
+    color: var(--text-primary);
+    font-weight: normal;
+    cursor: pointer;
+    flex: 1;
+}
+
+.create-form-error {
+  color: #ff4444;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.create-form-button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.create-form-button:hover {
+  background-color: var(--accent-hover);
 }

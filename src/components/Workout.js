@@ -47,26 +47,29 @@ const Workout = () => {
         getWorkoutData();
     }, [workout_id]);
 
-    if (loading) return <div>Loading workout...</div>;
-    if (error) return <div>Error: {error}</div>;
-    
     return (
-        <div className='Session'>
-            <h2>Workout Session</h2>
-            {exercises.length === 0 ? (
-                <p>No exercises found for this workout.</p>
-            ) : (
-                exercises.map((exercise) => (
-                    <Exercise
-                        key={exercise.id}
-                        name={exercise.name}
-                        sets={exercise.sets}
-                        reps={exercise.reps}
-                        workoutId={workout_id}
-                        exerciseId={exercise.id}
-                    />
-                ))
-            )}
+        <div className="Session">
+            <div className="create-form-container">
+                <h2>Workout Session</h2>
+                {loading ? (
+                    <p>Loading workout details...</p>
+                ) : error ? (
+                    <p className="create-form-error">{error}</p>
+                ) : exercises.length === 0 ? (
+                    <p>No exercises found for this workout.</p>
+                ) : (
+                    exercises.map((exercise) => (
+                        <Exercise
+                            key={exercise.id}
+                            name={exercise.name}
+                            sets={exercise.sets}
+                            reps={exercise.reps}
+                            workoutId={workout_id}
+                            exerciseId={exercise.id}
+                        />
+                    ))
+                )}
+            </div>
         </div>
     );
 };

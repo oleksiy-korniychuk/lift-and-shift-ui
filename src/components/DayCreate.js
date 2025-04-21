@@ -38,29 +38,29 @@ const DayCreate = () => {
     };
 
     return (
-        <div>
+        <div className="create-form-container">
             <h2>Create Day</h2>
-            <form onSubmit={saveBlock}>
-                <div>
-                <label>Day Name:</label>
-                <input
-                    type="text"
-                    value={dayName}
-                    onChange={(e) => setDayName(e.target.value)}
-                    required
-                />
+            <form onSubmit={saveBlock} className="create-form">
+                <div className="form-field">
+                    <label>Day Name:</label>
+                    <input
+                        type="text"
+                        value={dayName}
+                        onChange={(e) => setDayName(e.target.value)}
+                        required
+                    />
                 </div>
-                <div>
-                <label>Description:</label>
-                <input
-                    type="text"
-                    value={dayDescription}
-                    onChange={(e) => setDayDescription(e.target.value)}
-                />
+                <div className="form-field">
+                    <label>Description:</label>
+                    <input
+                        type="text"
+                        value={dayDescription}
+                        onChange={(e) => setDayDescription(e.target.value)}
+                    />
                 </div>
-                <button type="submit">Create</button>
+                <button type="submit" className="create-form-button">Create</button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="create-form-error">{error}</p>}
         </div>
     )
 }

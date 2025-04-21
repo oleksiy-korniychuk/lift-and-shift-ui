@@ -5,10 +5,10 @@
   --bg-elevated: #2d2d2d;
   --text-primary: #ffffff;
   --text-secondary: #b3b3b3;
-  --accent-color: #6200ee;
-  --accent-hover: #7c4dff;
+  --accent-color: #2d5a27;
+  --accent-hover: #22421e;
   --error-color: #cf6679;
-  --success-color: #03dac6;
+  --success-color: #4caf50;
   --border-color: #333333;
 }
 
@@ -92,7 +92,6 @@ input, select, textarea {
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   padding: 0.5rem;
-  margin-bottom: 1rem;
 }
 
 /* Media Queries */

@@ -47,10 +47,10 @@ const ExerciseCreate = () => {
     };
 
     return (
-        <div>
+        <div className="create-form-container">
             <h2>Create Exercise</h2>
-            <form onSubmit={saveBlock}>
-                <div>
+            <form onSubmit={saveBlock} className="create-form">
+                <div className="form-field">
                     <label>Name:</label>
                     <input
                         type="text"
@@ -59,15 +59,16 @@ const ExerciseCreate = () => {
                         required
                     />
                 </div>
-                <div>
-                    <label>Main Exercise:</label>
+                <div className="checkbox-field">
                     <input
                         type="checkbox"
-                        value={isMain}
+                        id="isMain"
+                        checked={isMain}
                         onChange={(e) => setIsMain(e.target.checked)}
                     />
+                    <label htmlFor="isMain">Main Exercise</label>
                 </div>
-                <div>
+                <div className="form-field">
                     <label>Sets:</label>
                     <input
                         type="number"
@@ -76,7 +77,7 @@ const ExerciseCreate = () => {
                         required
                     />
                 </div>
-                <div>
+                <div className="form-field">
                     <label>Reps:</label>
                     <input
                         type="number"
@@ -84,7 +85,7 @@ const ExerciseCreate = () => {
                         onChange={(e) => setReps(parseInt(e.target.value))}
                     />
                 </div>
-                <div>
+                <div className="form-field">
                     <label>Notes:</label>
                     <input
                         type="text"
@@ -92,9 +93,9 @@ const ExerciseCreate = () => {
                         onChange={(e) => setNotes(e.target.value)}
                     />
                 </div>
-                <button type="submit">Create</button>
+                <button type="submit" className="create-form-button">Create</button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="create-form-error">{error}</p>}
         </div>
     )
 }

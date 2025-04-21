@@ -158,8 +158,8 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
     }
 
     return (
-        <div className="exercise-row">
-            <span>{name}: {sets} sets of {reps} reps</span>
+        <div className="exercise-container">
+            <h3 className="exercise-heading">{name}: {sets} sets of {reps} reps</h3>
             {setList.map((set, index) => (
                 <Set
                     key={index}
@@ -172,7 +172,7 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
                 />
             ))}
             <div>
-                <button onClick={addSet}>+</button>
+                <button className="add-set-button" onClick={addSet}>Add Set</button>
             </div>
         </div>
     );
@@ -181,7 +181,7 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
 const Set = ({number, weight, actualReps, onWeightChange, onRepsChanged, onRemove}) => {
     return (
         <div className="set-row">
-            <span>({number}) </span>
+            <div className="set-number">{number}</div>
             <input
                 type="number"
                 placeholder="Weight (lb)"
@@ -194,7 +194,7 @@ const Set = ({number, weight, actualReps, onWeightChange, onRepsChanged, onRemov
                 value={actualReps === '0' ? '' : actualReps}
                 onChange={(e) => onRepsChanged(e.target.value)}
             />
-            <button onClick={onRemove}>-</button>
+            <button onClick={onRemove}>×</button>
         </div>
     );
 }

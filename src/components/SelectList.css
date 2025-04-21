@@ -133,3 +133,37 @@
     padding: 15px;
   }
 }
+
+.select-line {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    color: var(--text-primary);
+}
+
+.select-line:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-1px);
+}
+
+.select-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.select-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.select-description {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}

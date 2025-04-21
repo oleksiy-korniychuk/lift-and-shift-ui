@@ -42,20 +42,27 @@ const BlockSelect = () => {
     }
 
     return (
-        <div>
-            <div className='list'>
+        <div className="Session">
+            <div className="create-form-container">
                 <h2>Blocks</h2>
-                <p>select a block</p>
-                {loading ? 'loading' : (error ? 'error' : 
-                blocks.map((block) => (
-                    <SelectLine
-                        key={block.id}
-                        id={block.id}
-                        name={block.block_number}
-                        description={block.description}
-                        clickHandler={selectBlock}
-                    />
-                )))}
+                {loading ? (
+                    <p>Loading blocks...</p>
+                ) : error ? (
+                    <p className="create-form-error">{error}</p>
+                ) : (
+                    <>
+                        <p>Select a block</p>
+                        {blocks.map((block) => (
+                            <SelectLine
+                                key={block.id}
+                                id={block.id}
+                                name={block.block_number}
+                                description={block.description}
+                                clickHandler={selectBlock}
+                            />
+                        ))}
+                    </>
+                )}
             </div>
             <BlockCreate/>
         </div>

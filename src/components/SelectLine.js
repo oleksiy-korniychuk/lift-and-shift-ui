@@ -1,13 +1,15 @@
 import React from 'react';
 
-const SelectLine = ({id, name, description, clickHandler}) => {
+const SelectLine = ({ id, name, description, clickHandler }) => {
     return (
-        <button
-            className='line'
+        <button 
             onClick={() => clickHandler(id)}
+            className="select-line"
         >
-            <h3>{name}</h3>
-            <p>{description}</p>
+            <div className="select-content">
+                <span className="select-name">{name}</span>
+                {description && <span className="select-description">{description}</span>}
+            </div>
         </button>
     );
 }
