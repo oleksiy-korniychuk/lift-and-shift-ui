@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 import { supabase } from '../supabase';
 
-const ExerciseCreate = () => {
+const ExerciseCreate = ({ onExerciseCreated, editMode = false, exerciseId = null, initialName = '', initialIsMain = false, initialSets = 0, initialReps = 0, initialNotes = '', onCancelEdit }) => {
     const [name, setName] = useState('');
     const [isMain, setIsMain] = useState(false);
     const [sets, setSets] = useState(0);
@@ -15,41 +15,84 @@ const ExerciseCreate = () => {
     const { day_id } = useParams();
     const { user } = useAuth();
 
-    const saveBlock = async (e) => {
+    useEffect(() => {
+        if (editMode) {
+            setName(initialName);
+            setIsMain(initialIsMain);
+            setSets(initialSets);
+            setReps(initialReps);
+            setNotes(initialNotes);
+        }
+    }, [editMode, initialName, initialIsMain, initialSets, initialReps, initialNotes]);
+
+    const saveExercise = async (e) => {
         e.preventDefault();
         try {
-            const { error } = await supabase
-                .from('exercise')
-                .insert([
-                    {
-                        day_id: day_id,
-                        user_id: user.id,
+            if (editMode) {
+                // Update existing exercise
+                const { error } = await supabase
+                    .from('exercise')
+                    .update({
                         name: name,
                         is_main: isMain,
                         sets: sets,
                         reps: reps,
                         notes: notes
-                    }
-                ])
-                .select();
+                    })
+                    .eq('id', exerciseId)
+                    .eq('user_id', user.id);
 
-            if (error) throw error;
-            // clear form
-            setName('');
-            setIsMain(false);
-            setSets(0);
-            setReps(0);
-            setNotes('');
+                if (error) throw error;
+                
+                // Exit edit mode
+                if (onCancelEdit) {
+                    onCancelEdit();
+                }
+            } else {
+                // Create new exercise
+                const { error } = await supabase
+                    .from('exercise')
+                    .insert([
+                        {
+                            day_id: day_id,
+                            user_id: user.id,
+                            name: name,
+                            is_main: isMain,
+                            sets: sets,
+                            reps: reps,
+                            notes: notes
+                        }
+                    ])
+                    .select();
+
+                if (error) throw error;
+                // clear form
+                setName('');
+                setIsMain(false);
+                setSets(0);
+                setReps(0);
+                setNotes('');
+            }
+
+            // Notify parent component to refresh the list
+            if (onExerciseCreated) {
+                onExerciseCreated();
+            }
 
         } catch (error) {
             setError(error.message);
         }
     };
 
+    const handleCancel = () => {
+        if (onCancelEdit) {
+            onCancelEdit();
+        }
+    };
+
     return (
-        <div className="create-form-container">
-            <h2>Create Exercise</h2>
-            <form onSubmit={saveBlock} className="create-form">
+        <div>
+            <form onSubmit={saveExercise} className="create-form">
                 <div className="form-field">
                     <label>Name:</label>
                     <input
@@ -74,7 +117,7 @@ const ExerciseCreate = () => {
                         type="number"
                         value={sets === 0 ? '' : sets}
                         placeholder="ex. 3"
-                        onChange={(e) => setSets(parseInt(e.target.value))}
+                        onChange={(e) => setSets(parseInt(e.target.value) || 0)}
                         inputMode="numeric"
                         pattern="[0-9]*"
                         required
@@ -86,7 +129,7 @@ const ExerciseCreate = () => {
                         type="number"
                         value={reps === 0 ? '' : reps}
                         placeholder="ex. 10"
-                        onChange={(e) => setReps(parseInt(e.target.value))}
+                        onChange={(e) => setReps(parseInt(e.target.value) || 0)}
                         inputMode="numeric"
                         pattern="[0-9]*"
                     />
@@ -99,7 +142,16 @@ const ExerciseCreate = () => {
                         onChange={(e) => setNotes(e.target.value)}
                     />
                 </div>
-                <button type="submit" className="create-form-button">Create</button>
+                <div className="form-buttons">
+                    <button type="submit" className="create-form-button">
+                        {editMode ? 'Save' : 'Create'}
+                    </button>
+                    {editMode && (
+                        <button type="button" className="cancel-button" onClick={handleCancel}>
+                            Cancel
+                        </button>
+                    )}
+                </div>
             </form>
             {error && <p className="create-form-error">{error}</p>}
         </div>

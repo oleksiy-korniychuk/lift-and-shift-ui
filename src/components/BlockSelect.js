@@ -5,12 +5,15 @@ import SelectLine from './SelectLine';
 
 import { supabase } from '../supabase';
 import BlockCreate from './BlockCreate';
+import Modal from './Modal';
 import './SelectList.css';
 
 const BlockSelect = () => {
-    const [blocks, setBlocks] = useState('');
+    const [blocks, setBlocks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [editingBlock, setEditingBlock] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
     const { program_id } = useParams();
@@ -42,6 +45,48 @@ const BlockSelect = () => {
         navigate(`/days/${block_id}`);
     }
 
+    const openCreateModal = () => {
+        setEditingBlock(null);
+        setIsModalOpen(true);
+    }
+
+    const editBlock = (id, name, description) => {
+        const blockToEdit = blocks.find(block => block.id === id);
+        if (blockToEdit) {
+            setEditingBlock({
+                id,
+                blockNumber: blockToEdit.block_number,
+                description: blockToEdit.description
+            });
+            setIsModalOpen(true);
+        }
+    }
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setEditingBlock(null);
+    }
+
+    const handleBlockSaved = () => {
+        fetchBlocks();
+        closeModal();
+    }
+
+    const deleteBlock = async (id) => {
+        try {
+            const { error } = await supabase
+                .from('block')
+                .delete()
+                .eq('id', id)
+                .eq('user_id', user.id);
+
+            if (error) throw error;
+            fetchBlocks();
+        } catch (error) {
+            setError(error.message);
+        }
+    }
+
     return (
         <div className="Session">
             <div className="create-form-container">
@@ -57,15 +102,36 @@ const BlockSelect = () => {
                             <SelectLine
                                 key={block.id}
                                 id={block.id}
-                                name={block.block_number}
+                                name={`Block ${block.block_number}`}
                                 description={block.description}
                                 clickHandler={selectBlock}
+                                onEdit={editBlock}
+                                onDelete={deleteBlock}
                             />
                         ))}
                     </>
                 )}
+
+                <button className="add-button" onClick={openCreateModal}>
+                    <span className="add-button-icon">+</span>
+                    Add Block
+                </button>
             </div>
-            <BlockCreate onBlockCreated={fetchBlocks}/>
+
+            <Modal 
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                title={editingBlock ? "Edit Block" : "Create Block"}
+            >
+                <BlockCreate 
+                    onBlockCreated={handleBlockSaved}
+                    editMode={!!editingBlock}
+                    blockId={editingBlock?.id}
+                    initialBlockNumber={editingBlock?.blockNumber || 0}
+                    initialDescription={editingBlock?.description || ''}
+                    onCancelEdit={closeModal}
+                />
+            </Modal>
         </div>
     )
 }

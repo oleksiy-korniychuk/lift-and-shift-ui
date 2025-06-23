@@ -3,13 +3,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../supabase';
 import DayCreate from './DayCreate';
+import Modal from './Modal';
 import SelectLine from './SelectLine';
 import './SelectList.css';
 
 const DaySelect = () => {
-    const [days, setDays] = useState('');
+    const [days, setDays] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [editingDay, setEditingDay] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { block_id } = useParams();
     const { user } = useAuth();
@@ -41,6 +44,41 @@ const DaySelect = () => {
         navigate(`/day/${day_id}`);
     }
 
+    const openCreateModal = () => {
+        setEditingDay(null);
+        setIsModalOpen(true);
+    }
+
+    const editDay = (id, name, description) => {
+        setEditingDay({ id, name, description });
+        setIsModalOpen(true);
+    }
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setEditingDay(null);
+    }
+
+    const handleDaySaved = () => {
+        fetchDays();
+        closeModal();
+    }
+
+    const deleteDay = async (id) => {
+        try {
+            const { error } = await supabase
+                .from('day')
+                .delete()
+                .eq('id', id)
+                .eq('user_id', user.id);
+
+            if (error) throw error;
+            fetchDays();
+        } catch (error) {
+            setError(error.message);
+        }
+    }
+
     return (
         <div className="Session">
             <div className="create-form-container">
@@ -59,12 +97,33 @@ const DaySelect = () => {
                                 name={day.name}
                                 description={day.description}
                                 clickHandler={selectDay}
+                                onEdit={editDay}
+                                onDelete={deleteDay}
                             />
                         ))}
                     </>
                 )}
+
+                <button className="add-button" onClick={openCreateModal}>
+                    <span className="add-button-icon">+</span>
+                    Add Day
+                </button>
             </div>
-            <DayCreate onDayCreated={fetchDays}/>
+
+            <Modal 
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                title={editingDay ? "Edit Day" : "Create Day"}
+            >
+                <DayCreate 
+                    onDayCreated={handleDaySaved}
+                    editMode={!!editingDay}
+                    dayId={editingDay?.id}
+                    initialName={editingDay?.name || ''}
+                    initialDescription={editingDay?.description || ''}
+                    onCancelEdit={closeModal}
+                />
+            </Modal>
         </div>
     )
 }

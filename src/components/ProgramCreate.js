@@ -1,31 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../supabase';
 
-const ProgramCreate = ({ onProgramCreated }) => {
+const ProgramCreate = ({ onProgramCreated, editMode = false, programId = null, initialName = '', initialDescription = '', onCancelEdit }) => {
     const [programName, setProgramName] = useState('');
     const [programDescription, setProgramDescription] = useState('');
     const [error, setError] = useState(null);
     const { user } = useAuth();
 
+    useEffect(() => {
+        if (editMode) {
+            setProgramName(initialName);
+            setProgramDescription(initialDescription);
+        }
+    }, [editMode, initialName, initialDescription]);
+
     const saveProgram = async (e) => {
         e.preventDefault();
         try {
-            const { error } = await supabase
-                .from('program')
-                .insert([
-                    {
+            if (editMode) {
+                // Update existing program
+                const { error } = await supabase
+                    .from('program')
+                    .update({
                         name: programName,
-                        description: programDescription,
-                        user_id: user.id
-                    }
-                ])
-                .select();
+                        description: programDescription
+                    })
+                    .eq('id', programId)
+                    .eq('user_id', user.id);
 
-            if (error) throw error;
-            // clear form
-            setProgramName('');
-            setProgramDescription('');
+                if (error) throw error;
+                
+                // Exit edit mode
+                if (onCancelEdit) {
+                    onCancelEdit();
+                }
+            } else {
+                // Create new program
+                const { error } = await supabase
+                    .from('program')
+                    .insert([
+                        {
+                            name: programName,
+                            description: programDescription,
+                            user_id: user.id
+                        }
+                    ])
+                    .select();
+
+                if (error) throw error;
+                // clear form
+                setProgramName('');
+                setProgramDescription('');
+            }
 
             // Notify parent component to refresh the list
             if (onProgramCreated) {
@@ -37,9 +64,14 @@ const ProgramCreate = ({ onProgramCreated }) => {
         }
     };
 
+    const handleCancel = () => {
+        if (onCancelEdit) {
+            onCancelEdit();
+        }
+    };
+
     return (
-        <div className="create-form-container">
-            <h2>Create Program</h2>
+        <div>
             <form onSubmit={saveProgram} className="create-form">
                 <div className="form-field">
                     <label>Program Name:</label>
@@ -60,7 +92,16 @@ const ProgramCreate = ({ onProgramCreated }) => {
                         placeholder="Program description"
                     />
                 </div>
-                <button type="submit" className="create-form-button">Create</button>
+                <div className="form-buttons">
+                    <button type="submit" className="create-form-button">
+                        {editMode ? 'Save' : 'Create'}
+                    </button>
+                    {editMode && (
+                        <button type="button" className="cancel-button" onClick={handleCancel}>
+                            Cancel
+                        </button>
+                    )}
+                </div>
             </form>
             {error && <p className="create-form-error">{error}</p>}
         </div>

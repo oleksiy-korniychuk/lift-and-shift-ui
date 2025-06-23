@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../supabase';
 import ExerciseCreate from './ExerciseCreate';
+import Modal from './Modal';
 import SelectLine from './SelectLine';
 import './SelectList.css';
 
@@ -11,35 +12,93 @@ const Day = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [dayName, setDayName] = useState('');
+    const [editingExercise, setEditingExercise] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { user } = useAuth();
     const { day_id } = useParams();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchExercises = async () => {
-            try {
-                // Fetch exercises related to the day_id
-                const { data: exercisesData, error: exercisesError } = await supabase
-                    .from('exercise')
-                    .select('*, day:day_id(*)')
-                    .eq('day_id', day_id);
+    const fetchExercises = async () => {
+        try {
+            // Fetch exercises related to the day_id
+            const { data: exercisesData, error: exercisesError } = await supabase
+                .from('exercise')
+                .select('*, day:day_id(*)')
+                .eq('day_id', day_id);
+            
+            if (exercisesError) throw exercisesError;
+            
+            if (exercisesData && exercisesData.length > 0) {
+                setExercises(exercisesData);
+                setDayName(exercisesData[0].day.name);
+            } else {
+                // If no exercises, fetch just the day name
+                const { data: dayData, error: dayError } = await supabase
+                    .from('day')
+                    .select('name')
+                    .eq('id', day_id)
+                    .single();
                 
-                if (exercisesError) throw exercisesError;
-                
-                if (exercisesData && exercisesData.length > 0) {
-                    setExercises(exercisesData);
-                    setDayName(exercisesData[0].day.name);
-                }
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+                if (dayError) throw dayError;
+                setDayName(dayData.name);
+                setExercises([]);
             }
-        };
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchExercises();
     }, [day_id]);
+
+    const openCreateModal = () => {
+        setEditingExercise(null);
+        setIsModalOpen(true);
+    }
+
+    const editExercise = (id, name) => {
+        const exerciseToEdit = exercises.find(ex => ex.id === id);
+        if (exerciseToEdit) {
+            setEditingExercise({
+                id,
+                name: exerciseToEdit.name,
+                isMain: exerciseToEdit.is_main,
+                sets: exerciseToEdit.sets,
+                reps: exerciseToEdit.reps,
+                notes: exerciseToEdit.notes
+            });
+            setIsModalOpen(true);
+        }
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setEditingExercise(null);
+    };
+
+    const handleExerciseSaved = () => {
+        fetchExercises();
+        closeModal();
+    }
+
+    const deleteExercise = async (id) => {
+        try {
+            const { error } = await supabase
+                .from('exercise')
+                .delete()
+                .eq('id', id)
+                .eq('user_id', user.id);
+
+            if (error) throw error;
+            fetchExercises();
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
     const startWorkout = async () => {
         // create workout and pass new id to worlout page
@@ -114,15 +173,39 @@ const Day = () => {
                                 name={exercise.name}
                                 description={`${exercise.sets} sets × ${exercise.reps} reps${exercise.notes ? ` • ${exercise.notes}` : ''}`}
                                 clickHandler={() => {}}
+                                onEdit={editExercise}
+                                onDelete={deleteExercise}
                             />
                         ))}
                         <button className="create-form-button" onClick={startWorkout}>Start Workout</button>
                     </>
                 )}
+
+                <button className="add-button" onClick={openCreateModal}>
+                    <span className="add-button-icon">+</span>
+                    Add Exercise
+                </button>
             </div>
-            <ExerciseCreate />
+
+            <Modal 
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                title={editingExercise ? "Edit Exercise" : "Create Exercise"}
+            >
+                <ExerciseCreate 
+                    onExerciseCreated={handleExerciseSaved}
+                    editMode={!!editingExercise}
+                    exerciseId={editingExercise?.id}
+                    initialName={editingExercise?.name || ''}
+                    initialIsMain={editingExercise?.isMain || false}
+                    initialSets={editingExercise?.sets || 0}
+                    initialReps={editingExercise?.reps || 0}
+                    initialNotes={editingExercise?.notes || ''}
+                    onCancelEdit={closeModal}
+                />
+            </Modal>
         </div>
     );
 }
 
-export default Day
+export default Day;
