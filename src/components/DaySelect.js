@@ -74,6 +74,7 @@ const DaySelect = () => {
 
             if (error) throw error;
             fetchDays();
+            closeModal();
         } catch (error) {
             setError(error.message);
         }
@@ -98,7 +99,6 @@ const DaySelect = () => {
                                 description={day.description}
                                 clickHandler={selectDay}
                                 onEdit={editDay}
-                                onDelete={deleteDay}
                             />
                         ))}
                     </>
@@ -122,6 +122,7 @@ const DaySelect = () => {
                     initialName={editingDay?.name || ''}
                     initialDescription={editingDay?.description || ''}
                     onCancelEdit={closeModal}
+                    onDelete={deleteDay}
                 />
             </Modal>
         </div>

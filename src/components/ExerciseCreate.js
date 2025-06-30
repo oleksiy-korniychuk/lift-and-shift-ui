@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import useDeleteConfirmation from '../hooks/useDeleteConfirmation';
 
 import { supabase } from '../supabase';
 
-const ExerciseCreate = ({ onExerciseCreated, editMode = false, exerciseId = null, initialName = '', initialIsMain = false, initialSets = 0, initialReps = 0, initialNotes = '', onCancelEdit }) => {
+const ExerciseCreate = ({ onExerciseCreated, editMode = false, exerciseId = null, initialName = '', initialIsMain = false, initialSets = 0, initialReps = 0, initialNotes = '', onCancelEdit, onDelete }) => {
     const [name, setName] = useState('');
     const [isMain, setIsMain] = useState(false);
     const [sets, setSets] = useState(0);
@@ -14,6 +15,12 @@ const ExerciseCreate = ({ onExerciseCreated, editMode = false, exerciseId = null
 
     const { day_id } = useParams();
     const { user } = useAuth();
+
+    const { handleDeleteClick, DeleteConfirmationModal } = useDeleteConfirmation(
+        onDelete,
+        exerciseId,
+        name
+    );
 
     useEffect(() => {
         if (editMode) {
@@ -91,70 +98,80 @@ const ExerciseCreate = ({ onExerciseCreated, editMode = false, exerciseId = null
     };
 
     return (
-        <div>
-            <form onSubmit={saveExercise} className="create-form">
-                <div className="form-field">
-                    <label>Name:</label>
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="checkbox-field">
-                    <input
-                        type="checkbox"
-                        id="isMain"
-                        checked={isMain}
-                        onChange={(e) => setIsMain(e.target.checked)}
-                    />
-                    <label htmlFor="isMain">Main Exercise</label>
-                </div>
-                <div className="form-field">
-                    <label>Sets:</label>
-                    <input
-                        type="number"
-                        value={sets === 0 ? '' : sets}
-                        placeholder="ex. 3"
-                        onChange={(e) => setSets(parseInt(e.target.value) || 0)}
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        required
-                    />
-                </div>
-                <div className="form-field">
-                    <label>Reps:</label>
-                    <input
-                        type="number"
-                        value={reps === 0 ? '' : reps}
-                        placeholder="ex. 10"
-                        onChange={(e) => setReps(parseInt(e.target.value) || 0)}
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                    />
-                </div>
-                <div className="form-field">
-                    <label>Notes:</label>
-                    <input
-                        type="text"
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                    />
-                </div>
-                <div className="form-buttons">
-                    <button type="submit" className="create-form-button">
-                        {editMode ? 'Save' : 'Create'}
-                    </button>
-                    {editMode && (
-                        <button type="button" className="cancel-button" onClick={handleCancel}>
-                            Cancel
+        <>
+            <div>
+                <form onSubmit={saveExercise} className="create-form">
+                    <div className="form-field">
+                        <label>Name:</label>
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="checkbox-field">
+                        <input
+                            type="checkbox"
+                            id="isMain"
+                            checked={isMain}
+                            onChange={(e) => setIsMain(e.target.checked)}
+                        />
+                        <label htmlFor="isMain">Main Exercise</label>
+                    </div>
+                    <div className="form-field">
+                        <label>Sets:</label>
+                        <input
+                            type="number"
+                            value={sets === 0 ? '' : sets}
+                            placeholder="ex. 3"
+                            onChange={(e) => setSets(parseInt(e.target.value) || 0)}
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            required
+                        />
+                    </div>
+                    <div className="form-field">
+                        <label>Reps:</label>
+                        <input
+                            type="number"
+                            value={reps === 0 ? '' : reps}
+                            placeholder="ex. 10"
+                            onChange={(e) => setReps(parseInt(e.target.value) || 0)}
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                        />
+                    </div>
+                    
+                    <div className="form-field">
+                        <label>Notes:</label>
+                        <input
+                            type="text"
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-buttons">
+                        <button type="submit" className="create-form-button">
+                            {editMode ? 'Save' : 'Create'}
                         </button>
-                    )}
-                </div>
-            </form>
-            {error && <p className="create-form-error">{error}</p>}
-        </div>
+                        {editMode && (
+                            <button type="button" className="cancel-button" onClick={handleCancel}>
+                                Cancel
+                            </button>
+                        )}
+                        {editMode && onDelete && (
+                            <button type="button" className="delete-button" onClick={handleDeleteClick}>
+                                Delete
+                            </button>
+                        )}
+                    </div>
+                </form>
+                {error && <p className="create-form-error">{error}</p>}
+            </div>
+
+            <DeleteConfirmationModal />
+        </>
     )
 }
 

@@ -213,8 +213,8 @@
 .delete-button {
     background-color: #e25c5c;
     color: white;
+    font-weight: 500;
     border-radius: 4px;
-    margin: .2rem;
 }
 
 .delete-button:hover {
@@ -222,36 +222,8 @@
 }
 
 @media (max-width: 480px) {
-    .select-line-container {
-        flex-direction: column;
-    }
-    
-    .select-line {
-        width: 100%;
-        border-radius: 4px 4px 0 0;
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .select-line-actions {
-        width: 100%;
-        flex-direction: row;
-        margin-left: 0;
-        margin-top: 10px;
-    }
-    
     .action-button {
         flex: 1;
-    }
-    
-    .edit-button {
-        border-radius: 4px 0 0 4px;
-        margin: 0;
-    }
-    
-    .delete-button {
-        border-radius: 0 4px 4px 0;
-        margin: 0;
     }
 }
 

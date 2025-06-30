@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import useDeleteConfirmation from '../hooks/useDeleteConfirmation';
 
 import { supabase } from '../supabase';
 
-const DayCreate = ({ onDayCreated, editMode = false, dayId = null, initialName = '', initialDescription = '', onCancelEdit }) => {
+const DayCreate = ({ onDayCreated, editMode = false, dayId = null, initialName = '', initialDescription = '', onCancelEdit, onDelete }) => {
     const [dayName, setDayName] = useState('');
     const [dayDescription, setDayDescription] = useState('');
     const [error, setError] = useState(null);
 
     const { block_id } = useParams();
     const { user } = useAuth();
+
+    const { handleDeleteClick, DeleteConfirmationModal } = useDeleteConfirmation(
+        onDelete,
+        dayId,
+        dayName
+    );
 
     useEffect(() => {
         if (editMode) {
@@ -76,38 +83,47 @@ const DayCreate = ({ onDayCreated, editMode = false, dayId = null, initialName =
     };
 
     return (
-        <div>
-            <form onSubmit={saveDay} className="create-form">
-                <div className="form-field">
-                    <label>Day Name:</label>
-                    <input
-                        type="text"
-                        value={dayName}
-                        onChange={(e) => setDayName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-field">
-                    <label>Description:</label>
-                    <input
-                        type="text"
-                        value={dayDescription}
-                        onChange={(e) => setDayDescription(e.target.value)}
-                    />
-                </div>
-                <div className="form-buttons">
-                    <button type="submit" className="create-form-button">
-                        {editMode ? 'Save' : 'Create'}
-                    </button>
-                    {editMode && (
-                        <button type="button" className="cancel-button" onClick={handleCancel}>
-                            Cancel
+        <>
+            <div>
+                <form onSubmit={saveDay} className="create-form">
+                    <div className="form-field">
+                        <label>Day Name:</label>
+                        <input
+                            type="text"
+                            value={dayName}
+                            onChange={(e) => setDayName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-field">
+                        <label>Description:</label>
+                        <input
+                            type="text"
+                            value={dayDescription}
+                            onChange={(e) => setDayDescription(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-buttons">
+                        <button type="submit" className="create-form-button">
+                            {editMode ? 'Save' : 'Create'}
                         </button>
-                    )}
-                </div>
-            </form>
-            {error && <p className="create-form-error">{error}</p>}
-        </div>
+                        {editMode && (
+                            <button type="button" className="cancel-button" onClick={handleCancel}>
+                                Cancel
+                            </button>
+                        )}
+                        {editMode && onDelete && (
+                            <button type="button" className="delete-button" onClick={handleDeleteClick}>
+                                Delete
+                            </button>
+                        )}
+                    </div>
+                </form>
+                {error && <p className="create-form-error">{error}</p>}
+            </div>
+
+            <DeleteConfirmationModal />
+        </>
     )
 }
 

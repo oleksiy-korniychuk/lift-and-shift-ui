@@ -29,7 +29,9 @@ const BlockSelect = () => {
                 .eq('user_id', user.id);
             if (error) throw error;
 
-            setBlocks(blocks);
+            // Sort blocks by block_number in ascending order
+            const sortedBlocks = blocks.sort((a, b) => a.block_number - b.block_number);
+            setBlocks(sortedBlocks);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -82,6 +84,7 @@ const BlockSelect = () => {
 
             if (error) throw error;
             fetchBlocks();
+            closeModal();
         } catch (error) {
             setError(error.message);
         }
@@ -106,7 +109,6 @@ const BlockSelect = () => {
                                 description={block.description}
                                 clickHandler={selectBlock}
                                 onEdit={editBlock}
-                                onDelete={deleteBlock}
                             />
                         ))}
                     </>
@@ -130,6 +132,7 @@ const BlockSelect = () => {
                     initialBlockNumber={editingBlock?.blockNumber || 0}
                     initialDescription={editingBlock?.description || ''}
                     onCancelEdit={closeModal}
+                    onDelete={deleteBlock}
                 />
             </Modal>
         </div>

@@ -71,6 +71,7 @@ const ProgramSelect = () => {
 
             if (error) throw error;
             fetchPrograms();
+            closeModal();
         } catch (error) {
             setError(error.message);
         }
@@ -93,7 +94,6 @@ const ProgramSelect = () => {
                     description={program.description}
                     clickHandler={selectProgram}
                     onEdit={editProgram}
-                    onDelete={deleteProgram}
                 />
             )))}
 
@@ -114,6 +114,7 @@ const ProgramSelect = () => {
                     initialName={editingProgram?.name || ''}
                     initialDescription={editingProgram?.description || ''}
                     onCancelEdit={closeModal}
+                    onDelete={deleteProgram}
                 />
             </Modal>
 

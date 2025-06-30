@@ -95,6 +95,7 @@ const Day = () => {
 
             if (error) throw error;
             fetchExercises();
+            closeModal();
         } catch (error) {
             setError(error.message);
         }
@@ -174,7 +175,6 @@ const Day = () => {
                                 description={`${exercise.sets} sets × ${exercise.reps} reps${exercise.notes ? ` • ${exercise.notes}` : ''}`}
                                 clickHandler={() => {}}
                                 onEdit={editExercise}
-                                onDelete={deleteExercise}
                             />
                         ))}
                         <button className="create-form-button" onClick={startWorkout}>Start Workout</button>
@@ -202,6 +202,7 @@ const Day = () => {
                     initialReps={editingExercise?.reps || 0}
                     initialNotes={editingExercise?.notes || ''}
                     onCancelEdit={closeModal}
+                    onDelete={deleteExercise}
                 />
             </Modal>
         </div>
