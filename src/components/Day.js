@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../supabase';
@@ -19,7 +19,7 @@ const Day = () => {
     const { day_id } = useParams();
     const navigate = useNavigate();
 
-    const fetchExercises = async () => {
+    const fetchExercises = useCallback(async () => {
         try {
             // Fetch exercises related to the day_id
             const { data: exercisesData, error: exercisesError } = await supabase
@@ -49,11 +49,11 @@ const Day = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [day_id]);
 
     useEffect(() => {
         fetchExercises();
-    }, [day_id]);
+    }, [fetchExercises]);
 
     const openCreateModal = () => {
         setEditingExercise(null);
