@@ -1,0 +1,71 @@
+.draggable-select-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.drag-handle-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  color: #666;
+  font-size: 16px;
+  touch-action: none;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.05);
+  min-width: 32px;
+  height: 32px;
+}
+
+.drag-handle-inline:hover {
+  opacity: 1;
+  color: #333;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.drag-handle-inline:active {
+  cursor: grabbing;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+/* List header with reorder button */
+.exercise-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.reorder-button {
+  background: #f8f9fa;
+  padding: 6px 8px;
+  color: #495057;
+  transition: all 0.2s ease;
+}
+
+.reorder-button:hover {
+  background: #e9ecef;
+}
+
+.reorder-button.active {
+  background: var(--accent-color);
+  color: white;
+}
+
+.reorder-button.active:hover {
+  background: var(--accent-hover);
+}
+
+/* Improve dragging appearance */
+.dragging {
+  transform: rotate(1deg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  background: white;
+  z-index: 999;
+}
+
+ 

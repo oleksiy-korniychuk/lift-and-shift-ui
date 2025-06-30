@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SelectLine = ({ id, name, description, clickHandler, onEdit }) => {
+const SelectLine = ({ id, name, description, clickHandler, onEdit, dragHandle }) => {
     return (
         <div className="select-line-container">
             <button 
@@ -23,6 +23,7 @@ const SelectLine = ({ id, name, description, clickHandler, onEdit }) => {
                             Edit
                         </button>
                     )}
+                    {dragHandle}
                 </div>
             </button>
         </div>

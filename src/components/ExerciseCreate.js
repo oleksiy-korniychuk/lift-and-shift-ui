@@ -56,6 +56,21 @@ const ExerciseCreate = ({ onExerciseCreated, editMode = false, exerciseId = null
                     onCancelEdit();
                 }
             } else {
+                // Get the next order number for new exercise
+                const { data: maxOrderData, error: maxOrderError } = await supabase
+                    .from('exercise')
+                    .select('order')
+                    .eq('day_id', day_id)
+                    .eq('user_id', user.id)
+                    .order('order', { ascending: false })
+                    .limit(1);
+
+                if (maxOrderError) throw maxOrderError;
+
+                const nextOrder = maxOrderData && maxOrderData.length > 0 
+                    ? (maxOrderData[0].order || 0) + 1 
+                    : 1;
+
                 // Create new exercise
                 const { error } = await supabase
                     .from('exercise')
@@ -67,7 +82,8 @@ const ExerciseCreate = ({ onExerciseCreated, editMode = false, exerciseId = null
                             is_main: isMain,
                             sets: sets,
                             reps: reps,
-                            notes: notes
+                            notes: notes,
+                            order: nextOrder
                         }
                     ])
                     .select();

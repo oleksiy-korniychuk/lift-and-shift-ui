@@ -2,9 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../supabase';
+import DraggableList from './DraggableList';
+import './DraggableList.css';
+import DraggableSelectLine from './DraggableSelectLine';
+import './DraggableSelectLine.css';
 import ExerciseCreate from './ExerciseCreate';
 import Modal from './Modal';
-import SelectLine from './SelectLine';
 import './SelectList.css';
 
 const Day = () => {
@@ -14,6 +17,7 @@ const Day = () => {
     const [dayName, setDayName] = useState('');
     const [editingExercise, setEditingExercise] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isReorderMode, setIsReorderMode] = useState(false);
 
     const { user } = useAuth();
     const { day_id } = useParams();
@@ -25,7 +29,8 @@ const Day = () => {
             const { data: exercisesData, error: exercisesError } = await supabase
                 .from('exercise')
                 .select('*, day:day_id(*)')
-                .eq('day_id', day_id);
+                .eq('day_id', day_id)
+                .order('order', { ascending: true, nullsFirst: false });
             
             if (exercisesError) throw exercisesError;
             
@@ -101,6 +106,48 @@ const Day = () => {
         }
     };
 
+    const handleExerciseReorder = async (reorderedExercises) => {
+        try {
+            // Update local state immediately for better UX
+            setExercises(reorderedExercises);
+
+            // Update order in database
+            const updates = reorderedExercises.map((exercise, index) => ({
+                id: exercise.id,
+                order: index + 1
+            }));
+
+            for (const update of updates) {
+                const { error } = await supabase
+                    .from('exercise')
+                    .update({ order: update.order })
+                    .eq('id', update.id)
+                    .eq('user_id', user.id);
+
+                if (error) throw error;
+            }
+        } catch (error) {
+            setError(error.message);
+            // Revert to original order on error
+            fetchExercises();
+        }
+    };
+
+    const toggleReorderMode = () => {
+        setIsReorderMode(!isReorderMode);
+    };
+
+    const renderExerciseItem = (exercise) => (
+        <DraggableSelectLine
+            key={exercise.id}
+            id={exercise.id}
+            name={exercise.name}
+            description={`${exercise.sets} sets × ${exercise.reps} reps${exercise.notes ? ` • ${exercise.notes}` : ''}`}
+            clickHandler={() => {}}
+            onEdit={editExercise}
+        />
+    );
+
     const startWorkout = async () => {
         // create workout and pass new id to worlout page
         let workout_id;
@@ -166,17 +213,32 @@ const Day = () => {
                     <p>No exercises found for this day.</p>
                 ) : (
                     <>
-                        <p>Exercise list</p>
-                        {exercises.map((exercise) => (
-                            <SelectLine
-                                key={exercise.id}
-                                id={exercise.id}
-                                name={exercise.name}
-                                description={`${exercise.sets} sets × ${exercise.reps} reps${exercise.notes ? ` • ${exercise.notes}` : ''}`}
-                                clickHandler={() => {}}
-                                onEdit={editExercise}
+                        <div className="exercise-list-header">
+                            <p>Exercise list</p>
+                            <button 
+                                className={`reorder-button ${isReorderMode ? 'active' : ''}`}
+                                onClick={toggleReorderMode}
+                            >
+                                {isReorderMode ? (
+                                    <>
+                                        ✓ Done
+                                    </>
+                                ) : (
+                                    <>
+                                        ⋮⋮ Reorder
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                        <div className={`draggable-container ${isReorderMode ? 'reorder-mode' : ''}`}>
+                            <DraggableList
+                                items={exercises}
+                                onReorder={handleExerciseReorder}
+                                renderItem={renderExerciseItem}
+                                keyExtractor={(exercise) => exercise.id}
+                                isReorderMode={isReorderMode}
                             />
-                        ))}
+                        </div>
                         <button className="create-form-button" onClick={startWorkout}>Start Workout</button>
                     </>
                 )}

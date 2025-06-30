@@ -31,6 +31,7 @@
 - **reps** `int2` (nullable)
 - **notes** `text` (nullable)
 - **user_id** `uuid` (foreign key -> auth.user.id)
+- **order** `int4` (default = 1)
 
 ### workout
 - **id** `int8` (primary key, unique)

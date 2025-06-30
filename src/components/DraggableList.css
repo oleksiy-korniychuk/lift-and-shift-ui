@@ -1,0 +1,11 @@
+.draggable-container {
+  position: relative;
+}
+
+/* Base styles for draggable items */
+.draggable-item {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+ 

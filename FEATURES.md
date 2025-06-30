@@ -25,6 +25,7 @@
   - Sets and reps
   - Option to mark as main exercise
   - Additional notes for technique or instructions
+- Drag and drop re-ordering
 
 ## Workout Execution
 - Start workouts from any day in your program
