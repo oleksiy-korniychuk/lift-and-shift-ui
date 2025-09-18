@@ -1,7 +1,6 @@
-import React from 'react';
 
-const SelectLine = ({ id, name, description, clickHandler, onEdit, dragHandle }) => {
-    return (
+    const SelectLine = ({ id, name, description, clickHandler, onEdit, onDelete, dragHandle }) => {
+        return (
         <div className="select-line-container">
             <button 
                 onClick={() => clickHandler(id)}
@@ -12,6 +11,19 @@ const SelectLine = ({ id, name, description, clickHandler, onEdit, dragHandle })
                     {description && <span className="select-description">{description}</span>}
                 </div>
                 <div className="select-line-actions">
+                    {onDelete && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete(id, name, description);
+                            }}
+                            className="action-button delete-x-button"
+                            aria-label={`Delete ${name}`}
+                            title="Delete"
+                        >
+                            X
+                        </button>
+                    )}
                     {onEdit && (
                         <button 
                             onClick={(e) => {

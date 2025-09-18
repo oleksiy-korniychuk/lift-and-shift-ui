@@ -341,3 +341,42 @@
 .delete-confirm-button:hover {
     background-color: #c74545;
 }
+
+/* List header with Edit toggle */
+.list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.edit-toggle-button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.edit-toggle-button:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Small X delete button for history rows */
+.delete-x-button {
+    background-color: #e25c5c;
+    color: #fff;
+    border-radius: 4px;
+    min-width: 28px;
+    height: 28px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.delete-x-button:hover {
+    background-color: #c74545;
+}
