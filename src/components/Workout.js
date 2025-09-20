@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../supabase';
 import Exercise from './Exercise';
@@ -30,12 +30,19 @@ const Workout = () => {
                     .from('exercise')
                     .select('*')
                     .eq('day_id', workoutData.day_id)
+                    .order('order', { ascending: true })
                     .order('id');
                 
                 if (exercisesError) throw exercisesError;
                 
                 if (exercisesData) {
-                    setExercises(exercisesData);
+                    const sorted = [...exercisesData].sort((a, b) => {
+                        const ao = a.order ?? Number.MAX_SAFE_INTEGER;
+                        const bo = b.order ?? Number.MAX_SAFE_INTEGER;
+                        if (ao !== bo) return ao - bo;
+                        return (a.id ?? 0) - (b.id ?? 0);
+                    });
+                    setExercises(sorted);
                 }
             } catch (error) {
                 setError(error.message);
