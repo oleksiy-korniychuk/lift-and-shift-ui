@@ -2,6 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React from 'react';
 import './DraggableList.css';
+import DraggableSelectLine from './DraggableSelectLine';
 import './DraggableSelectLine.css';
 
 const DraggableItem = ({ id, children, index, isReorderMode = false }) => {
@@ -27,7 +28,7 @@ const DraggableItem = ({ id, children, index, isReorderMode = false }) => {
 
   // Clone children and pass drag handle props to DraggableSelectLine
   const childrenWithProps = React.Children.map(children, child => {
-    if (React.isValidElement(child) && child.type.name === 'DraggableSelectLine') {
+    if (React.isValidElement(child) && child.type === DraggableSelectLine) {
       return React.cloneElement(child, {
         showDragHandle: isReorderMode,
         dragHandleProps: isReorderMode ? { ...attributes, ...listeners } : {}
@@ -47,4 +48,4 @@ const DraggableItem = ({ id, children, index, isReorderMode = false }) => {
   );
 };
 
-export default DraggableItem; 
+export default DraggableItem;
