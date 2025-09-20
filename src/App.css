@@ -204,9 +204,11 @@
 /* Exercise and Set styling */
 .exercise-container {
   background-color: var(--bg-secondary);
+  display: grid;
+  justify-content: center;
   border-radius: 8px;
-  padding: 20px;
-  margin: 0 auto 20px;
+  padding: 10px;
+  margin: 0 auto 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   max-width: 800px;
   width: 100%;
@@ -215,9 +217,14 @@
 .exercise-heading {
   font-size: 1.2rem;
   font-weight: 600;
-  margin-bottom: 15px;
-  color: var(--accent-color);
+  color: #ffffff;
   text-align: center;
+}
+
+.exercise-subtitle {
+  font-size: 1rem;
+  text-align: center;
+  color: var(--accent-color);
 }
 
 .set-row {
@@ -279,7 +286,7 @@
   padding: 8px 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin: 10px auto 0;
+  margin: 0 auto 0;
   display: block;
 }
 
@@ -313,7 +320,7 @@
 .create-form-container h2 {
   color: var(--accent-color);
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   font-size: 1.5rem;
 }
 

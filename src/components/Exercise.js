@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../supabase';
 
@@ -159,7 +159,8 @@ const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {
 
     return (
         <div className="exercise-container">
-            <h3 className="exercise-heading">{name}: {sets} sets of {reps} reps</h3>
+            <h3 className="exercise-heading">{name}</h3>
+            <h3 className="exercise-subtitle">{sets} sets of {reps} reps</h3>
             {setList.map((set, index) => (
                 <Set
                     key={index}
