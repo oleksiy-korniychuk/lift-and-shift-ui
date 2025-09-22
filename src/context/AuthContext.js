@@ -81,7 +81,6 @@ export function AuthProvider({ children }) {
     // Listen for auth state changes
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
-      setLoading(false);
     });
 
     // Cleanup subscription
