@@ -19,6 +19,17 @@ const getCookie = (name) => {
   return null;
 };
 
+// Helper to decode base64url strings in the browser
+const decodeBase64UrlToString = (base64Url) => {
+  // Convert base64url to base64
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
+  // Decode to binary string
+  const binary = atob(padded);
+  // Convert binary string to Uint8Array and decode UTF-8
+  return new TextDecoder('utf-8').decode(Uint8Array.from(binary, c => c.charCodeAt(0)));
+};
+
 // Helper function to set session from cookie
 const setSessionFromCookie = async () => {
   const projectRef = getSupabaseProjectRef();
@@ -30,7 +41,7 @@ const setSessionFromCookie = async () => {
   if (authCookie) {
     try {
         const encoded = authCookie.startsWith('base64-') ? authCookie.slice(7) : authCookie;
-        const decoded = Buffer.from(encoded, 'base64url').toString('utf8');
+        const decoded = decodeBase64UrlToString(encoded);
         const sessionData = JSON.parse(decoded);
       if (sessionData.access_token && sessionData.refresh_token) {
         const { data } = await supabase.auth.setSession({
