@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../hooks/useAuth';
 import useDeleteConfirmation from '../hooks/useDeleteConfirmation.jsx';
 import { supabase } from '../supabase';
 

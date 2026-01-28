@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../supabase';
 import DayCreate from './DayCreate.jsx';
 import Modal from './Modal.jsx';

@@ -53,10 +53,9 @@ const DraggableList = ({
     return (
       <>
         {items.map((item, index) => (
-          <DraggableItem 
-            key={keyExtractor(item)} 
+          <DraggableItem
+            key={keyExtractor(item)}
             id={keyExtractor(item)}
-            index={index}
             isReorderMode={false}
           >
             {renderItem(item, index)}
@@ -78,10 +77,9 @@ const DraggableList = ({
         strategy={verticalListSortingStrategy}
       >
         {items.map((item, index) => (
-          <DraggableItem 
-            key={keyExtractor(item)} 
+          <DraggableItem
+            key={keyExtractor(item)}
             id={keyExtractor(item)}
-            index={index}
             isReorderMode={isReorderMode}
           >
             {renderItem(item, index)}

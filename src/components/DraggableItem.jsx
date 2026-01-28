@@ -2,10 +2,10 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React from 'react';
 import './DraggableList.css';
-import DraggableSelectLine from './DraggableSelectLine.jsx';
 import './DraggableSelectLine.css';
+import DraggableSelectLine from './DraggableSelectLine.jsx';
 
-const DraggableItem = ({ id, children, index, isReorderMode = false }) => {
+const DraggableItem = ({ id, children, isReorderMode = false }) => {
   const {
     attributes,
     listeners,

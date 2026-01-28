@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../hooks/useAuth';
 import useDeleteConfirmation from '../hooks/useDeleteConfirmation.jsx';
 
 import { supabase } from '../supabase';

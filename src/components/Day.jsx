@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../supabase';
-import DraggableList from './DraggableList.jsx';
 import './DraggableList.css';
-import DraggableSelectLine from './DraggableSelectLine.jsx';
+import DraggableList from './DraggableList.jsx';
 import './DraggableSelectLine.css';
+import DraggableSelectLine from './DraggableSelectLine.jsx';
 import ExerciseCreate from './ExerciseCreate.jsx';
 import Modal from './Modal.jsx';
 import './SelectList.css';
@@ -65,7 +65,7 @@ const Day = () => {
         setIsModalOpen(true);
     }
 
-    const editExercise = (id, name) => {
+    const editExercise = (id) => {
         const exerciseToEdit = exercises.find(ex => ex.id === id);
         if (exerciseToEdit) {
             setEditingExercise({

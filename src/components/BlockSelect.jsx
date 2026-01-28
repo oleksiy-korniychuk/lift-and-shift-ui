@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../hooks/useAuth';
 import SelectLine from './SelectLine.jsx';
 
 import { supabase } from '../supabase';
@@ -52,7 +52,7 @@ const BlockSelect = () => {
         setIsModalOpen(true);
     }
 
-    const editBlock = (id, name, description) => {
+    const editBlock = (id) => {
         const blockToEdit = blocks.find(block => block.id === id);
         if (blockToEdit) {
             setEditingBlock({
