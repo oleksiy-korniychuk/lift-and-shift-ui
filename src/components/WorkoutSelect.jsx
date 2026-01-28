@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 import useDeleteConfirmation from '../hooks/useDeleteConfirmation.jsx';
 import { supabase } from '../supabase';
 import SelectLine from './SelectLine.jsx';

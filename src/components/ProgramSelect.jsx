@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 import Modal from './Modal.jsx';
 import ProgramCreate from './ProgramCreate.jsx';
 import SelectLine from './SelectLine.jsx';
