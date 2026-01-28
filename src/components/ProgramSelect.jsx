@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import Modal from './Modal';
-import ProgramCreate from './ProgramCreate';
-import SelectLine from './SelectLine';
+import { useAuth } from '../context/AuthContext.jsx';
+import Modal from './Modal.jsx';
+import ProgramCreate from './ProgramCreate.jsx';
+import SelectLine from './SelectLine.jsx';
 
 import { supabase } from '../supabase';
 import './SelectList.css';

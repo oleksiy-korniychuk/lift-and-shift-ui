@@ -1,18 +1,17 @@
-import React from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext.jsx';
 
-import Header from './components/Header';
-import Login from './components/Login';
-import ProgramSelect from './components/ProgramSelect';
-import PrivateRoute from './routes/PrivateRoute';
+import Header from './components/Header.jsx';
+import Login from './components/Login.jsx';
+import ProgramSelect from './components/ProgramSelect.jsx';
+import PrivateRoute from './routes/PrivateRoute.jsx';
 
 import './App.css';
-import BlockSelect from './components/BlockSelect';
-import Day from './components/Day';
-import DaySelect from './components/DaySelect';
-import Workout from './components/Workout';
-import WorkoutSelect from './components/WorkoutSelect';
+import BlockSelect from './components/BlockSelect.jsx';
+import Day from './components/Day.jsx';
+import DaySelect from './components/DaySelect.jsx';
+import Workout from './components/Workout.jsx';
+import WorkoutSelect from './components/WorkoutSelect.jsx';
 
 function App() {
   return (

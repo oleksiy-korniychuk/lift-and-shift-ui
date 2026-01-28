@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import useDeleteConfirmation from '../hooks/useDeleteConfirmation';
+import { useAuth } from '../context/AuthContext.jsx';
+import useDeleteConfirmation from '../hooks/useDeleteConfirmation.jsx';
 import { supabase } from '../supabase';
-import SelectLine from './SelectLine';
+import SelectLine from './SelectLine.jsx';
 import './SelectList.css';
 
 const WorkoutSelect = () => {

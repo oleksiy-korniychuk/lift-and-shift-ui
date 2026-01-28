@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import SelectLine from './SelectLine';
+import { useAuth } from '../context/AuthContext.jsx';
+import SelectLine from './SelectLine.jsx';
 
 import { supabase } from '../supabase';
-import BlockCreate from './BlockCreate';
-import Modal from './Modal';
+import BlockCreate from './BlockCreate.jsx';
+import Modal from './Modal.jsx';
 import './SelectList.css';
 
 const BlockSelect = () => {

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import Modal from '../components/Modal';
+import { useState } from 'react';
+import Modal from '../components/Modal.jsx';
 
 const useDeleteConfirmation = (onDelete, itemId, itemName) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -26,7 +26,7 @@ const useDeleteConfirmation = (onDelete, itemId, itemName) => {
             title="Confirm Delete"
         >
             <div className="delete-confirmation">
-                <p>Are you sure you want to delete "{itemName}"?</p>
+                <p>Are you sure you want to delete &quot;{itemName}&quot;?</p>
                 <p className="delete-warning">This action cannot be undone.</p>
                 <div className="modal-actions">
                     <button 
@@ -52,4 +52,4 @@ const useDeleteConfirmation = (onDelete, itemId, itemName) => {
     };
 };
 
-export default useDeleteConfirmation; 
+export default useDeleteConfirmation;

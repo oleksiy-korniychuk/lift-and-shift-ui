@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../supabase';
-import Exercise from './Exercise';
+import Exercise from './Exercise.jsx';
 
 const Workout = () => {
     const [exercises, setExercises] = useState([]);

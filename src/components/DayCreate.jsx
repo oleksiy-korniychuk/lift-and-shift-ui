@@ -1,39 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import useDeleteConfirmation from '../hooks/useDeleteConfirmation';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
+import useDeleteConfirmation from '../hooks/useDeleteConfirmation.jsx';
+
 import { supabase } from '../supabase';
 
-const ProgramCreate = ({ onProgramCreated, editMode = false, programId = null, initialName = '', initialDescription = '', onCancelEdit, onDelete }) => {
-    const [programName, setProgramName] = useState('');
-    const [programDescription, setProgramDescription] = useState('');
+const DayCreate = ({ onDayCreated, editMode = false, dayId = null, initialName = '', initialDescription = '', onCancelEdit, onDelete }) => {
+    const [dayName, setDayName] = useState('');
+    const [dayDescription, setDayDescription] = useState('');
     const [error, setError] = useState(null);
+
+    const { block_id } = useParams();
     const { user } = useAuth();
 
     const { handleDeleteClick, DeleteConfirmationModal } = useDeleteConfirmation(
         onDelete,
-        programId,
-        programName
+        dayId,
+        dayName
     );
 
     useEffect(() => {
         if (editMode) {
-            setProgramName(initialName);
-            setProgramDescription(initialDescription);
+            setDayName(initialName);
+            setDayDescription(initialDescription);
         }
     }, [editMode, initialName, initialDescription]);
 
-    const saveProgram = async (e) => {
+    const saveDay = async (e) => {
         e.preventDefault();
         try {
             if (editMode) {
-                // Update existing program
+                // Update existing day
                 const { error } = await supabase
-                    .from('program')
+                    .from('day')
                     .update({
-                        name: programName,
-                        description: programDescription
+                        name: dayName,
+                        description: dayDescription
                     })
-                    .eq('id', programId)
+                    .eq('id', dayId)
                     .eq('user_id', user.id);
 
                 if (error) throw error;
@@ -43,27 +47,28 @@ const ProgramCreate = ({ onProgramCreated, editMode = false, programId = null, i
                     onCancelEdit();
                 }
             } else {
-                // Create new program
+                // Create new day
                 const { error } = await supabase
-                    .from('program')
+                    .from('day')
                     .insert([
                         {
-                            name: programName,
-                            description: programDescription,
-                            user_id: user.id
+                            block_id: block_id,
+                            user_id: user.id,
+                            name: dayName,
+                            description: dayDescription
                         }
                     ])
                     .select();
 
                 if (error) throw error;
                 // clear form
-                setProgramName('');
-                setProgramDescription('');
+                setDayName('');
+                setDayDescription('');
             }
 
             // Notify parent component to refresh the list
-            if (onProgramCreated) {
-                onProgramCreated();
+            if (onDayCreated) {
+                onDayCreated();
             }
 
         } catch (error) {
@@ -80,14 +85,13 @@ const ProgramCreate = ({ onProgramCreated, editMode = false, programId = null, i
     return (
         <>
             <div>
-                <form onSubmit={saveProgram} className="create-form">
+                <form onSubmit={saveDay} className="create-form">
                     <div className="form-field">
-                        <label>Program Name:</label>
+                        <label>Day Name:</label>
                         <input
                             type="text"
-                            value={programName}
-                            onChange={(e) => setProgramName(e.target.value)}
-                            placeholder="ex. Starting Strength"
+                            value={dayName}
+                            onChange={(e) => setDayName(e.target.value)}
                             required
                         />
                     </div>
@@ -95,9 +99,8 @@ const ProgramCreate = ({ onProgramCreated, editMode = false, programId = null, i
                         <label>Description:</label>
                         <input
                             type="text"
-                            value={programDescription}
-                            onChange={(e) => setProgramDescription(e.target.value)}
-                            placeholder="Program description"
+                            value={dayDescription}
+                            onChange={(e) => setDayDescription(e.target.value)}
                         />
                     </div>
                     <div className="form-buttons">
@@ -124,4 +127,4 @@ const ProgramCreate = ({ onProgramCreated, editMode = false, programId = null, i
     )
 }
 
-export default ProgramCreate
+export default DayCreate

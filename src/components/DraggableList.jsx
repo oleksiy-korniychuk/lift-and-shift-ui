@@ -16,8 +16,7 @@ import {
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import React from 'react';
-import DraggableItem from './DraggableItem';
+import DraggableItem from './DraggableItem.jsx';
 
 const DraggableList = ({ 
   items, 
@@ -93,4 +92,4 @@ const DraggableList = ({
   );
 };
 
-export default DraggableList; 
+export default DraggableList;

@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 import { supabase } from '../supabase';
-import DraggableList from './DraggableList';
+import DraggableList from './DraggableList.jsx';
 import './DraggableList.css';
-import DraggableSelectLine from './DraggableSelectLine';
+import DraggableSelectLine from './DraggableSelectLine.jsx';
 import './DraggableSelectLine.css';
-import ExerciseCreate from './ExerciseCreate';
-import Modal from './Modal';
+import ExerciseCreate from './ExerciseCreate.jsx';
+import Modal from './Modal.jsx';
 import './SelectList.css';
 
 const Day = () => {

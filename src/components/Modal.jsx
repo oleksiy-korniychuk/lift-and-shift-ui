@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import './Modal.css';
 
 const Modal = ({ isOpen, onClose, title, children }) => {
@@ -37,4 +37,4 @@ const Modal = ({ isOpen, onClose, title, children }) => {
     );
 };
 
-export default Modal; 
+export default Modal;

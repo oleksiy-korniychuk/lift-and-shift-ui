@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 import { supabase } from '../supabase';
-import DayCreate from './DayCreate';
-import Modal from './Modal';
-import SelectLine from './SelectLine';
+import DayCreate from './DayCreate.jsx';
+import Modal from './Modal.jsx';
+import SelectLine from './SelectLine.jsx';
 import './SelectList.css';
 
 const DaySelect = () => {

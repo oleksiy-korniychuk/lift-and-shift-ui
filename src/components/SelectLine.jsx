@@ -1,6 +1,6 @@
 
-    const SelectLine = ({ id, name, description, clickHandler, onEdit, onDelete, dragHandle }) => {
-        return (
+const SelectLine = ({ id, name, description, clickHandler, onEdit, onDelete, dragHandle }) => {
+    return (
         <div className="select-line-container">
             <button 
                 onClick={() => clickHandler(id)}

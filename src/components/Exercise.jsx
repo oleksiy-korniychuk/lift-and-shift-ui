@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 import { supabase } from '../supabase';
 
 const Exercise = ({ name, sets, reps, workoutId, exerciseId }) => {

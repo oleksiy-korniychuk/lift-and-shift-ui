@@ -1,6 +1,5 @@
-import React from 'react';
 import './DraggableSelectLine.css';
-import SelectLine from './SelectLine';
+import SelectLine from './SelectLine.jsx';
 
 const DraggableSelectLine = ({ 
   showDragHandle = false, 
@@ -25,4 +24,4 @@ const DraggableSelectLine = ({
   );
 };
 
-export default DraggableSelectLine; 
+export default DraggableSelectLine;

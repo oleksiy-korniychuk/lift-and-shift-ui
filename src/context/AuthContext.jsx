@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../supabase';
 
 const AuthContext = createContext();
 
 // Helper function to get Supabase project reference from URL
 const getSupabaseProjectRef = () => {
-  const url = process.env.REACT_APP_SUPABASE_URL;
+  const url = import.meta.env.VITE_SUPABASE_URL;
   if (!url) return null;
   const match = url.match(/https:\/\/([^.]+)\.supabase\.co/);
   return match ? match[1] : null;

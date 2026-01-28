@@ -1,14 +1,22 @@
 # Lift and Shift
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern workout tracking application built with React and Vite.
 
 ## How to Run
-1. rename `.env.example` to `.env.local` and update the two SupaBase secret values
+1. Rename `.env.example` to `.env.local` and update the two Supabase values:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
 2. In the project directory, run:
+   - `npm install`
+   - `npm run dev`
+3. The app will automatically open in your browser at http://localhost:3000
 
-    - `npm install`
-    - `npm start local`
-3. If your default browser does not do so automatically, navigate to http://localhost:8080
+## Available Scripts
+
+- `npm run dev` - Start the development server
+- `npm run build` - Build for production (outputs to `dist/`)
+- `npm run preview` - Preview the production build locally
+- `npm run lint` - Run ESLint to check for code issues
 
 ## Description
 This is a workout application designed to plan out a workout program, start workouts, and track exercises.
