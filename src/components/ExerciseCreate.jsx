@@ -139,6 +139,7 @@ const ExerciseCreate = ({ onExerciseCreated, editMode = false, exerciseId = null
                         <label>Sets:</label>
                         <input
                             type="number"
+                            min={1}
                             value={sets === 0 ? '' : sets}
                             placeholder="ex. 3"
                             onChange={(e) => setSets(parseInt(e.target.value) || 0)}
@@ -151,6 +152,7 @@ const ExerciseCreate = ({ onExerciseCreated, editMode = false, exerciseId = null
                         <label>Reps:</label>
                         <input
                             type="number"
+                            min={1}
                             value={reps === 0 ? '' : reps}
                             placeholder="ex. 10"
                             onChange={(e) => setReps(parseInt(e.target.value) || 0)}

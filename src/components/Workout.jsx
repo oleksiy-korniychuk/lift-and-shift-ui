@@ -98,9 +98,14 @@ const Workout = () => {
 
     const addAdhocExercise = async () => {
         if (!newExerciseName.trim()) return;
+        if (newExerciseSets < 1 || newExerciseReps < 1) {
+            setError('Sets and reps must be at least 1');
+            return;
+        }
         
         try {
             setAddingExercise(true);
+            setError(null);
             
             // Create the exercise (with null day_id for adhoc)
             const { data: exerciseData, error: exerciseError } = await supabase
@@ -131,7 +136,15 @@ const Workout = () => {
                     reps: 0
                 });
             
-            if (logError) throw logError;
+            if (logError) {
+                // Roll back exercise creation if log insert fails.
+                await supabase
+                    .from('exercise')
+                    .delete()
+                    .eq('id', exerciseData.id)
+                    .eq('user_id', user.id);
+                throw logError;
+            }
             
             // Add to local state
             setExercises(prev => [...prev, {
@@ -170,15 +183,6 @@ const Workout = () => {
                 ) : exercises.length === 0 ? (
                     <div>
                         <p>No exercises yet.</p>
-                        {isAdhoc && (
-                            <button 
-                                className="add-button" 
-                                onClick={() => setShowAddExercise(true)}
-                            >
-                                <span className="add-button-icon">+</span>
-                                Add Exercise
-                            </button>
-                        )}
                     </div>
                 ) : (
                     exercises.map((exercise) => (
@@ -228,6 +232,7 @@ const Workout = () => {
                                         <input
                                             type="number"
                                             inputMode="numeric"
+                                            min={1}
                                             value={newExerciseSets}
                                             onChange={(e) => setNewExerciseSets(parseInt(e.target.value) || 0)}
                                             style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
@@ -240,6 +245,7 @@ const Workout = () => {
                                         <input
                                             type="number"
                                             inputMode="numeric"
+                                            min={1}
                                             value={newExerciseReps}
                                             onChange={(e) => setNewExerciseReps(parseInt(e.target.value) || 0)}
                                             style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}

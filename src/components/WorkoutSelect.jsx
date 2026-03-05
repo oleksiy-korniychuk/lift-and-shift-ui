@@ -141,6 +141,7 @@ const WorkoutSelect = () => {
             <button 
                 className="add-button" 
                 onClick={createAdhocWorkout}
+                disabled={loading}
                 style={{ marginBottom: '20px', backgroundColor: 'var(--accent-color)' }}
             >
                 <span className="add-button-icon">+</span>
