@@ -52,8 +52,39 @@ const WorkoutSelect = () => {
         return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
 
+    const createAdhocWorkout = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('workout')
+                .insert({
+                    workout_date: new Date().toISOString(),
+                    user_id: user.id,
+                    notes: 'Adhoc Workout'
+                })
+                .select()
+                .single();
+            
+            if (error) throw error;
+            
+            if (data) {
+                navigate(`/workout/${data.id}`);
+            }
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const WorkoutRow = ({ workout }) => {
-        const formattedName = `${formatDate(workout.workout_date)} - ${workout.day.name}`;
+        // Handle adhoc workouts (no day_id) vs planned workouts
+        const isAdhoc = !workout.day_id;
+        const formattedName = isAdhoc 
+            ? `${formatDate(workout.workout_date)} - Adhoc Workout`
+            : `${formatDate(workout.workout_date)} - ${workout.day?.name || 'Unknown Day'}`;
+        
+        const description = workout.notes || (isAdhoc ? 'Quick workout' : (workout.program?.name || ''));
 
         const deleteWorkout = async (workoutId) => {
             try {
@@ -85,7 +116,7 @@ const WorkoutSelect = () => {
                     key={workout.id}
                     id={workout.id}
                     name={formattedName}
-                    description={workout.notes || `${workout.program.name}`}
+                    description={description}
                     clickHandler={selectWorkout}
                     onDelete={editMode ? () => handleDeleteClick() : undefined}
                 />
@@ -105,6 +136,17 @@ const WorkoutSelect = () => {
                     {editMode ? 'Done' : 'Edit'}
                 </button>
             </div>
+            
+            {/* Adhoc Workout Button */}
+            <button 
+                className="add-button" 
+                onClick={createAdhocWorkout}
+                style={{ marginBottom: '20px', backgroundColor: 'var(--accent-color)' }}
+            >
+                <span className="add-button-icon">+</span>
+                Start Adhoc Workout
+            </button>
+            
             <p>select a workout</p>
             {loading ? 'loading' : (error ? 'error' : 
                 workouts.map((workout) => (
