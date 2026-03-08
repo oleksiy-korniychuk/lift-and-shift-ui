@@ -60,7 +60,10 @@ const WorkoutSelect = () => {
                 .insert({
                     workout_date: new Date().toISOString(),
                     user_id: user.id,
-                    notes: 'Adhoc Workout'
+                    notes: 'Adhoc Workout',
+                    program_id: 0,
+                    block_id: 0,
+                    day_id: 0
                 })
                 .select()
                 .single();
@@ -78,8 +81,8 @@ const WorkoutSelect = () => {
     };
 
     const WorkoutRow = ({ workout }) => {
-        // Handle adhoc workouts (no day_id) vs planned workouts
-        const isAdhoc = !workout.day_id;
+        // Handle adhoc workouts (day_id = 0) vs planned workouts
+        const isAdhoc = workout.day_id === 0;
         const formattedName = isAdhoc 
             ? `${formatDate(workout.workout_date)} - Adhoc Workout`
             : `${formatDate(workout.workout_date)} - ${workout.day?.name || 'Unknown Day'}`;

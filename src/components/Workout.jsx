@@ -36,8 +36,8 @@ const Workout = () => {
                 
                 if (workoutError) throw workoutError;
                 
-                // Check if this is an adhoc workout (no day_id)
-                const adhoc = !workoutData.day_id;
+                // Check if this is an adhoc workout (day_id = 0)
+                const adhoc = workoutData.day_id === 0;
                 setIsAdhoc(adhoc);
                 
                 if (adhoc) {
@@ -112,7 +112,7 @@ const Workout = () => {
                 .from('exercise')
                 .insert({
                     name: newExerciseName.trim(),
-                    day_id: null, // adhoc exercise
+                    day_id: 0, // adhoc exercise
                     user_id: user.id,
                     sets: newExerciseSets,
                     reps: newExerciseReps,
